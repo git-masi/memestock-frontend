@@ -1,5 +1,41 @@
+html {
+  font-size: 62.5%;
+}
+
+:root {
+  /* Font sizes */
+  --normal: 1.8rem;
+
+  /* Colors */
+  --black: #03060a;
+  --white: #fbfaf9;
+
+  --light: #d6f1fa;
+  --light-accent: #ac984d;
+  --main: #33bde9;
+  --dark: #273d6c;
+  --dark-accent: #7a6a7b;
+
+  --light-accent-2: #f3d16a;
+  --dark-2: #131d34;
+
+  --blue-gradient: linear-gradient(
+    65.5deg,
+    rgba(23, 205, 205, 1) -15.1%,
+    rgba(23, 25, 95, 1) 91.5%
+  );
+  --light-blue-gradient: linear-gradient(135deg, #5efce8 10%, #736efe 100%);
+}
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  font-size: var(--normal);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
