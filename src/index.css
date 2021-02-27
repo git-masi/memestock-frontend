@@ -3,8 +3,19 @@ html {
 }
 
 :root {
+  /* Radius */
+  --rounded: 8px;
+  --rounder: 15px;
+  --pill: 200rem;
+  --circle: 50%;
+
+  /* shadow */
+  --basic-shadow: 0px 2px 5px 1px rgba(0, 0, 0, 0.3);
+
   /* Font sizes */
   --normal: 1.8rem;
+  --medium: 2rem;
+  --small-heading: 2.2rem;
 
   /* Colors */
   --black: #03060a;

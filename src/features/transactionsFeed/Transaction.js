@@ -1,4 +1,8 @@
+// Modules
 import React from 'react';
+
+// Styles
+import styles from './Transaction.module.css';
 
 function Transaction(props) {
   const {
@@ -11,8 +15,8 @@ function Transaction(props) {
     },
   } = props;
   return (
-    <div>
-      <p>{message}</p>
+    <div className={styles.transaction}>
+      <h3>{message}</h3>
       <p>
         {buyerName} purchased {symbol} from {sellerName} for ${total}
       </p>
