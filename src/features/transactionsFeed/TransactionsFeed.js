@@ -1,12 +1,13 @@
 // Modules
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Redux Store
-import { fetchTransactions } from './transactionsSlice';
+import { fetchTransactions, selectAllTransactions } from './transactionsSlice';
 
 function TransactionsFeed() {
   const dispatch = useDispatch();
+  const transactions = useSelector(selectAllTransactions);
 
   useEffect(() => {
     dispatch(fetchTransactions());
@@ -14,7 +15,8 @@ function TransactionsFeed() {
 
   return (
     <div>
-      <h1>test</h1>
+      {transactions.length > 0 &&
+        transactions.map((t) => <p key={t.id}>{t.type}</p>)}
     </div>
   );
 }
