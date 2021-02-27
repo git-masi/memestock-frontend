@@ -16,7 +16,7 @@ function TransactionsFeed() {
   return (
     <div>
       {transactions.length > 0 &&
-        transactions.map((t) => <p key={t.id}>{t.type}</p>)}
+        transactions.map((t) => <p key={t.id}>{t.message}</p>)}
     </div>
   );
 }
