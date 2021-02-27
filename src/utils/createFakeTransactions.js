@@ -1,7 +1,6 @@
 // Utils
 import { createRandomId } from './createRandomId';
 import { getRandomBoolean } from './getRandomBoolean';
-import { transactionTypes } from './transactionTypes';
 import { getRandomIndex } from './getRandomIndex';
 
 export function createFakeTransactions(num = 10) {
@@ -18,7 +17,6 @@ function createFakeTransaction() {
   return {
     id: createRandomId(),
     total: Math.floor(Math.random() * 1_000_000),
-    type: getRandomBoolean() ? transactionTypes.buy : transactionTypes.sell,
     message: createMessage(),
   };
 }
