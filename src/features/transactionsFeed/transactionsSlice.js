@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // Utils
 import { createFakeTransactions } from '../../utils/createFakeTransactions';
 import { mockApiResponse } from '../../utils/mockApiResponse';
+import { showLoader, hideLoader } from '../portal/globalLoaderSlice';
 
 const initialState = {
   loading: false,
@@ -57,6 +58,7 @@ export function fetchTransactions() {
       if (data.length > 0) return;
 
       dispatch(startFetchingTransactions());
+      dispatch(showLoader());
 
       // todo: fetch real data
       const dummyData = createFakeTransactions();
@@ -66,6 +68,8 @@ export function fetchTransactions() {
     } catch (error) {
       console.log(error);
       dispatch(errorFetchingTransactions());
+    } finally {
+      dispatch(hideLoader());
     }
   };
 }
