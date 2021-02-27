@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { mockApiResponse } from '../../utils/mockApiResponse';
 
 const initialState = [];
 
@@ -29,7 +30,8 @@ export function fetchTransactions() {
     if (transactions.length > 0) return;
 
     // todo: fetch real data
-    const orders = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    const dummyData = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    const orders = await mockApiResponse(dummyData);
 
     dispatch(addTransactions(orders));
   };
