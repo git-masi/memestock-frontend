@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Transactions() {
+function TransactionsFeed() {
   return (
     <div>
       <h1>test</h1>
@@ -8,4 +8,4 @@ function Transactions() {
   );
 }
 
-export default Transactions;
+export default TransactionsFeed;
