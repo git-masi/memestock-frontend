@@ -35,6 +35,7 @@ export function fetchTransactions() {
 
     // todo: fetch real data
     const dummyData = createFakeTransactions();
+    // todo: handle error
     const orders = await mockApiResponse(dummyData);
 
     dispatch(addTransactions(orders));
