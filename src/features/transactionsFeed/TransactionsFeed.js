@@ -13,7 +13,7 @@ import Transaction from './Transaction';
 
 function TransactionsFeed() {
   const dispatch = useDispatch();
-  const transactions = useSelector(selectAllTransactions);
+  const { data, hasError } = useSelector(selectAllTransactions);
 
   useEffect(() => {
     dispatch(fetchTransactions());
@@ -21,8 +21,10 @@ function TransactionsFeed() {
 
   return (
     <div className={styles.container}>
-      {transactions.length > 0 &&
-        transactions.map((t) => <Transaction key={t.id} transaction={t} />)}
+      {data.length > 0 &&
+        data.map((t) => <Transaction key={t.id} transaction={t} />)}
+
+      {hasError && <p>Oh no! Something went wrong 😟</p>}
     </div>
   );
 }
