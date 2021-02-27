@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 // Redux Store
 import { fetchTransactions, selectAllTransactions } from './transactionsSlice';
 
+// Components
+import Transaction from './Transaction';
+
 function TransactionsFeed() {
   const dispatch = useDispatch();
   const transactions = useSelector(selectAllTransactions);
@@ -16,7 +19,7 @@ function TransactionsFeed() {
   return (
     <div>
       {transactions.length > 0 &&
-        transactions.map((t) => <p key={t.id}>{t.message}</p>)}
+        transactions.map((t) => <Transaction key={t.id} transaction={t} />)}
     </div>
   );
 }
