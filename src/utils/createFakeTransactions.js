@@ -1,6 +1,7 @@
+import { internet } from 'faker';
+
 // Utils
 import { createRandomId } from './createRandomId';
-import { getRandomBoolean } from './getRandomBoolean';
 import { getRandomIndex } from './getRandomIndex';
 
 export function createFakeTransactions(num = 10) {
@@ -18,6 +19,8 @@ function createFakeTransaction() {
     id: createRandomId(),
     total: Math.floor(Math.random() * 1_000_000),
     message: createMessage(),
+    buyerName: internet.userName(),
+    sellerName: internet.userName(),
   };
 }
 
