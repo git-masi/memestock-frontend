@@ -1,4 +1,8 @@
+// Modules
 import { createSlice } from '@reduxjs/toolkit';
+
+// Utils
+import { createFakeTransactions } from '../../utils/createFakeTransactions';
 import { mockApiResponse } from '../../utils/mockApiResponse';
 
 const initialState = [];
@@ -9,6 +13,7 @@ export const transactionsSlice = createSlice({
   reducers: {
     addTransactions: (state, action) => {
       const { payload } = action;
+      console.log({ payload });
       return payload.concat(state);
     },
   },
@@ -30,7 +35,7 @@ export function fetchTransactions() {
     if (transactions.length > 0) return;
 
     // todo: fetch real data
-    const dummyData = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    const dummyData = createFakeTransactions();
     const orders = await mockApiResponse(dummyData);
 
     dispatch(addTransactions(orders));
