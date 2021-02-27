@@ -21,6 +21,7 @@ function createFakeTransaction() {
     message: createMessage(),
     buyerName: internet.userName(),
     sellerName: internet.userName(),
+    stock: { symbol: 'EXPL' },
   };
 }
 
