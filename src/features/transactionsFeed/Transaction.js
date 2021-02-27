@@ -16,9 +16,11 @@ function Transaction(props) {
   } = props;
   return (
     <div className={styles.transaction}>
-      <h3>{message}</h3>
-      <p>
-        {buyerName} purchased {symbol} from {sellerName} for ${total}
+      <h3 className={styles.name}>{buyerName}</h3>
+      <p className={styles.total}>${total}</p>
+      <p className={styles.message}>&ldquo;{message}&rdquo;</p>
+      <p className={styles.details}>
+        Purchased {symbol} from {sellerName}
       </p>
     </div>
   );

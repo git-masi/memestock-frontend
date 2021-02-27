@@ -1,7 +1,41 @@
 .transaction {
   margin-bottom: 2rem;
   padding: 1rem;
+  display: grid;
+  grid-template-columns: auto min-content;
+  grid-template-areas:
+    'name total'
+    'message message'
+    'details details';
+
   border: 1px solid var(--black);
   border-radius: var(--rounded);
   box-shadow: var(--basic-shadow);
+}
+
+.name {
+  grid-area: name;
+  color: var(--dark);
+}
+
+.total {
+  grid-area: total;
+}
+
+.message {
+  grid-area: message;
+  margin: 2rem 0;
+  font-size: var(--large-heading);
+  text-align: center;
+}
+
+.details {
+  grid-area: details;
+  font-size: var(--small);
+}
+
+@media screen and (min-width: 600px) {
+  .transaction {
+    padding: 2rem;
+  }
 }
