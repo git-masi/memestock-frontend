@@ -13,7 +13,6 @@ export const transactionsSlice = createSlice({
   reducers: {
     addTransactions: (state, action) => {
       const { payload } = action;
-      console.log({ payload });
       return payload.concat(state);
     },
   },
