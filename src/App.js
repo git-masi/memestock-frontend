@@ -17,7 +17,7 @@ function App() {
             <TransactionsFeed />
           </Route>
           <Route path="/test">
-            <h1>TEST!</h1>
+            <h1>Test!</h1>
           </Route>
           <Route path="/">
             <Error404 />
