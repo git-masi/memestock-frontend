@@ -13,30 +13,25 @@ import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
 export default class Sidebar extends Component {
 
     componentDidMount() {
-        // this.collapse();
+        collapse();
     }
 
     render() {
 
-
-    function collapse() {
-        document.getElementsByClassName("sidebar-nav")[0].display = "none";
-        document.getElementsByClassName("fa-chevron-circle-left")[0].display = "none";
-    }
-
-    function uncollapse() {
-        document.getElementsByClassName("sidebar-nav")[0].display = "block";
-        document.getElementsByClassName("fa-chevron-circle-left")[0].display = "block";
-    }
-
         return (
             <React.Fragment>
               <div className="nav-container">
-              <FontAwesomeIcon icon={faChevronCircleLeft} onClick="collapse()" />
-              <FontAwesomeIcon icon={faChevronCircleRight} onClick="uncollapse()" />
+              <FontAwesomeIcon icon={faChevronCircleLeft} onClick={collapse} className="collapse-sidebar" />
+              <FontAwesomeIcon icon={faChevronCircleRight} onClick={uncollapse} className="uncollapse-sidebar" />
                    {/* Sidebar icons and Links */}
                    <div className="sidebar-nav">
                     <ul className="sidebar-list">
+                        <li>
+                            <NavLink to="/sign-up" className="sidebar-navlink sign-up">Sign Up</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/sign-in" className="sidebar-navlink sign-in">Sign In</NavLink>
+                        </li>
                         <li>
                             <FontAwesomeIcon icon={faCommentsDollar} />
                             <NavLink to="/feed" className="sidebar-navlink">Feed</NavLink>
@@ -68,4 +63,18 @@ export default class Sidebar extends Component {
 
     }
 
+   
+
+}
+
+function collapse() {
+document.getElementsByClassName("sidebar-nav")[0].style.display = "none";
+document.getElementsByClassName("collapse-sidebar")[0].style.display = "none";
+document.getElementsByClassName("uncollapse-sidebar")[0].style.display = "block";
+}
+
+function uncollapse() {
+    document.getElementsByClassName("sidebar-nav")[0].style.display = "block";
+    document.getElementsByClassName("uncollapse-sidebar")[0].style.display = "none";
+    document.getElementsByClassName("collapse-sidebar")[0].style.display = "block";
 }
