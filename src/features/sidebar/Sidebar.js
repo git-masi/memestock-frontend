@@ -23,7 +23,9 @@ export default function Sidebar() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.wrapper}>
+      <div
+        className={[styles.wrapper, openSidebar ? styles.open : ''].join(' ')}
+      >
         {openSidebar ? (
           <FontAwesomeIcon
             icon={faChevronCircleLeft}
