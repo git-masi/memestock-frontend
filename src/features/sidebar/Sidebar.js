@@ -9,7 +9,6 @@ import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
 
-
 export default function Sidebar() {
 
     const [openSidebar, setOpenSidebar] = useState(false);
@@ -66,4 +65,3 @@ export default function Sidebar() {
         )
 
     }
-
