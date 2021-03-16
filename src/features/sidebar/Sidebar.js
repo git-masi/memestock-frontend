@@ -21,67 +21,57 @@ export default function Sidebar() {
   const [openSidebar, setOpenSidebar] = useState(false);
 
   return (
-    <div className="nav-container">
+    <div className={styles.container}>
       {openSidebar && (
         <FontAwesomeIcon
           icon={faChevronCircleLeft}
           onClick={() => setOpenSidebar(false)}
-          className="collapse-sidebar"
+          size="2x"
         />
       )}
+
       {!openSidebar && (
         <FontAwesomeIcon
           icon={faChevronCircleRight}
           onClick={() => setOpenSidebar(true)}
-          className="uncollapse-sidebar"
+          size="2x"
         />
       )}
-      {openSidebar && (
-        <div className="sidebar-nav">
-          <ul className="sidebar-list">
-            <li>
-              <NavLink to="/sign-up" className="sidebar-navlink sign-up">
-                Sign Up
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/sign-in" className="sidebar-navlink sign-in">
-                Sign In
-              </NavLink>
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faCommentsDollar} />
-              <NavLink to="/feed" className="sidebar-navlink">
-                Feed
-              </NavLink>
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faChartLine} />
-              <NavLink to="/visualize" className="sidebar-navlink">
-                Visualize
-              </NavLink>
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faHistory} />
-              <NavLink to="/history" className="sidebar-navlink">
-                History
-              </NavLink>
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faPlusCircle} />
-              <NavLink to="/new-order" className="sidebar-navlink">
-                New Order
-              </NavLink>
-            </li>
-            <li>
-              <FontAwesomeIcon icon={faCog} />
-              <NavLink to="/settings" className="sidebar-navlink">
-                Settings
-              </NavLink>
-            </li>
-          </ul>
-        </div>
-      )}
+
+      <div className={styles.linkWrapper}>
+        <NavLink to="/sign-up" className={styles.link}>
+          Sign Up
+        </NavLink>
+
+        <NavLink to="/sign-in" className={styles.link}>
+          Sign In
+        </NavLink>
+
+        <NavLink to="/feed" className={styles.link}>
+          <FontAwesomeIcon icon={faCommentsDollar} />
+          Feed
+        </NavLink>
+
+        <NavLink to="/visualize" className={styles.link}>
+          <FontAwesomeIcon icon={faChartLine} />
+          Visualize
+        </NavLink>
+
+        <NavLink to="/history" className={styles.link}>
+          <FontAwesomeIcon icon={faHistory} />
+          History
+        </NavLink>
+
+        <NavLink to="/new-order" className={styles.link}>
+          <FontAwesomeIcon icon={faPlusCircle} />
+          New Order
+        </NavLink>
+
+        <NavLink to="/settings" className={styles.link}>
+          <FontAwesomeIcon icon={faCog} />
+          Settings
+        </NavLink>
+      </div>
     </div>
   );
 }
