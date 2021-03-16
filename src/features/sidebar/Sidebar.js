@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCommentsDollar } from '@fortawesome/free-solid-svg-icons';
-import { faHistory } from '@fortawesome/free-solid-svg-icons';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { faChartLine } from '@fortawesome/free-solid-svg-icons';
-import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons';
-import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCommentsDollar,
+  faHistory,
+  faPlusCircle,
+  faCog,
+  faChartLine,
+  faChevronCircleLeft,
+  faChevronCircleRight,
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function Sidebar() {
   const [openSidebar, setOpenSidebar] = useState(false);
