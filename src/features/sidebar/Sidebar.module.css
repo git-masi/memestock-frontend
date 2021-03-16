@@ -1,0 +1,32 @@
+.container {
+  position: relative;
+  background: transparent;
+}
+
+.wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 1rem;
+  width: fit-content;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 50px;
+  grid-auto-rows: min-content;
+  align-items: center;
+  gap: 2rem;
+  font-size: var(--normal);
+  background: var(--white);
+}
+
+.link {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  white-space: nowrap;
+}
+
+.icon {
+  justify-self: end;
+  color: var(--dark-accent);
+}

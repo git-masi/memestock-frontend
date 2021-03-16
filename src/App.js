@@ -1,6 +1,9 @@
 // Modules
 import React from 'react';
 
+// Styles
+import styles from './App.module.css';
+
 // Components
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Error404 from './features/errorPage/Error404';
@@ -14,15 +17,17 @@ function App() {
     <>
       <GlobalLoader />
       <Router>
-        <Sidebar />
-        <Switch>
-          <Route path="/transactions/feed">
-            <TransactionsFeed />
-          </Route>
-          <Route path="/">
-            <Error404 />
-          </Route>
-        </Switch>
+        <main className={styles.main}>
+          <Sidebar />
+          <Switch>
+            <Route path="/transactions/feed">
+              <TransactionsFeed />
+            </Route>
+            <Route path="/">
+              <Error404 />
+            </Route>
+          </Switch>
+        </main>
       </Router>
     </>
   );

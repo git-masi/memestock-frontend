@@ -15,6 +15,7 @@ import {
   faChartLine,
   faChevronCircleLeft,
   faChevronCircleRight,
+  faSignInAlt,
 } from '@fortawesome/free-solid-svg-icons';
 
 export default function Sidebar() {
@@ -22,55 +23,62 @@ export default function Sidebar() {
 
   return (
     <div className={styles.container}>
-      {openSidebar && (
-        <FontAwesomeIcon
-          icon={faChevronCircleLeft}
-          onClick={() => setOpenSidebar(false)}
-          size="2x"
-        />
-      )}
+      <div className={styles.wrapper}>
+        <p style={{ visibility: 'hidden' }}>hidden</p>
+        {openSidebar ? (
+          <FontAwesomeIcon
+            icon={faChevronCircleLeft}
+            onClick={() => setOpenSidebar(false)}
+            className={styles.icon}
+            size="2x"
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon={faChevronCircleRight}
+            onClick={() => setOpenSidebar(true)}
+            className={styles.icon}
+            size="2x"
+          />
+        )}
 
-      {!openSidebar && (
-        <FontAwesomeIcon
-          icon={faChevronCircleRight}
-          onClick={() => setOpenSidebar(true)}
-          size="2x"
-        />
-      )}
-
-      <div className={styles.linkWrapper}>
-        <NavLink to="/sign-up" className={styles.link}>
-          Sign Up
-        </NavLink>
-
+        {/* todo: conditionally render based on global singed in state */}
         <NavLink to="/sign-in" className={styles.link}>
           Sign In
         </NavLink>
+        <FontAwesomeIcon icon={faSignInAlt} className={styles.icon} size="2x" />
 
         <NavLink to="/feed" className={styles.link}>
-          <FontAwesomeIcon icon={faCommentsDollar} />
           Feed
         </NavLink>
+        <FontAwesomeIcon
+          icon={faCommentsDollar}
+          className={styles.icon}
+          size="2x"
+        />
 
         <NavLink to="/visualize" className={styles.link}>
-          <FontAwesomeIcon icon={faChartLine} />
           Visualize
         </NavLink>
+        <FontAwesomeIcon icon={faChartLine} className={styles.icon} size="2x" />
 
         <NavLink to="/history" className={styles.link}>
-          <FontAwesomeIcon icon={faHistory} />
           History
         </NavLink>
+        <FontAwesomeIcon icon={faHistory} className={styles.icon} size="2x" />
 
         <NavLink to="/new-order" className={styles.link}>
-          <FontAwesomeIcon icon={faPlusCircle} />
           New Order
         </NavLink>
+        <FontAwesomeIcon
+          icon={faPlusCircle}
+          className={styles.icon}
+          size="2x"
+        />
 
         <NavLink to="/settings" className={styles.link}>
-          <FontAwesomeIcon icon={faCog} />
           Settings
         </NavLink>
+        <FontAwesomeIcon icon={faCog} className={styles.icon} size="2x" />
       </div>
     </div>
   );
