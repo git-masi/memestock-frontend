@@ -10,7 +10,6 @@ import Error404 from './features/errorPage/Error404';
 import TransactionsFeed from './features/transactionsFeed/TransactionsFeed';
 import GlobalLoader from './features/portal/GlobalLoader';
 import Sidebar from './features/sidebar/Sidebar';
-import './features/sidebar/sidebar.css';
 
 function App() {
   return (
@@ -20,7 +19,7 @@ function App() {
         <main className={styles.main}>
           <Sidebar />
           <Switch>
-            <Route path="/transactions/feed">
+            <Route path="/feed">
               <TransactionsFeed />
             </Route>
             <Route path="/">
