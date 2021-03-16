@@ -1,4 +1,10 @@
+// Modules
 import React, { useState } from 'react';
+
+// Styles
+import styles from './Sidebar.module.css';
+
+// Components
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
