@@ -41,7 +41,11 @@ export default function Sidebar() {
         )}
 
         {/* todo: conditionally render based on global singed in state */}
-        <NavLink to="/sign-in" className={styles.link}>
+        <NavLink
+          to="/sign-in"
+          className={styles.link}
+          activeClassName={styles.active}
+        >
           <span>Sign In</span>
           <FontAwesomeIcon
             icon={faSignInAlt}
@@ -50,7 +54,11 @@ export default function Sidebar() {
           />
         </NavLink>
 
-        <NavLink to="/feed" className={styles.link}>
+        <NavLink
+          to="/feed"
+          className={styles.link}
+          activeClassName={styles.active}
+        >
           Feed
           <FontAwesomeIcon
             icon={faCommentsDollar}
@@ -59,7 +67,11 @@ export default function Sidebar() {
           />
         </NavLink>
 
-        <NavLink to="/visualize" className={styles.link}>
+        <NavLink
+          to="/visualize"
+          className={styles.link}
+          activeClassName={styles.active}
+        >
           Visualize
           <FontAwesomeIcon
             icon={faChartLine}
@@ -68,12 +80,20 @@ export default function Sidebar() {
           />
         </NavLink>
 
-        <NavLink to="/history" className={styles.link}>
+        <NavLink
+          to="/history"
+          className={styles.link}
+          activeClassName={styles.active}
+        >
           History
           <FontAwesomeIcon icon={faHistory} className={styles.icon} size="2x" />
         </NavLink>
 
-        <NavLink to="/new-order" className={styles.link}>
+        <NavLink
+          to="/new-order"
+          className={styles.link}
+          activeClassName={styles.active}
+        >
           New Order
           <FontAwesomeIcon
             icon={faPlusCircle}
@@ -82,7 +102,11 @@ export default function Sidebar() {
           />
         </NavLink>
 
-        <NavLink to="/settings" className={styles.link}>
+        <NavLink
+          to="/settings"
+          className={styles.link}
+          activeClassName={styles.active}
+        >
           Settings
           <FontAwesomeIcon icon={faCog} className={styles.icon} size="2x" />
         </NavLink>

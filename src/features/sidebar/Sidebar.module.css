@@ -24,9 +24,7 @@
   white-space: nowrap;
 }
 
-.link,
-.link:active,
-.link:visited {
+.link {
   text-decoration: none;
   font-weight: bold;
   color: var(--dark);
@@ -43,4 +41,8 @@
   margin-bottom: 2rem;
   color: var(--dark);
   cursor: pointer;
+}
+
+.active {
+  color: var(--dark-accent);
 }
