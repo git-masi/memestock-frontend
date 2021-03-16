@@ -3,6 +3,9 @@ html {
 }
 
 :root {
+  /* Utilities */
+  --sidebar-width: 50px;
+
   /* Radius */
   --rounded: 8px;
   --rounder: 15px;
@@ -56,6 +59,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--white);
 }
 
 code {

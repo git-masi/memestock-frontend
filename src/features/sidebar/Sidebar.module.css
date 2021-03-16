@@ -1,0 +1,54 @@
+.container {
+  position: relative;
+  background: transparent;
+}
+
+.wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  padding: 1rem;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--normal);
+  background: var(--white);
+  transform: translateX(calc(-100% + var(--sidebar-width) + 5px));
+  transition: all 300ms ease-in;
+}
+
+.open {
+  transform: translateX(0%);
+  box-shadow: var(--basic-shadow);
+}
+
+.link {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.link {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--dark);
+}
+
+.icon {
+  margin-left: 2rem;
+  color: inherit;
+}
+
+.chevron {
+  margin-left: auto;
+  margin-bottom: 2rem;
+  color: var(--dark);
+  cursor: pointer;
+}
+
+.active {
+  color: var(--dark-accent);
+}
