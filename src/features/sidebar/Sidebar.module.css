@@ -14,7 +14,7 @@
   flex-direction: column;
   font-size: var(--normal);
   background: var(--white);
-  transform: translateX(calc(-100% + 55px));
+  transform: translateX(calc(-100% + var(--sidebar-width) + 5px));
   transition: all 300ms ease-in;
 }
 

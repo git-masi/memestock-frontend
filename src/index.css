@@ -3,6 +3,9 @@ html {
 }
 
 :root {
+  /* Utilities */
+  --sidebar-width: 50px;
+
   /* Radius */
   --rounded: 8px;
   --rounder: 15px;
