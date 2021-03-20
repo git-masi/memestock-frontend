@@ -7,6 +7,7 @@
   color: var(--white);
 }
 
+/* Overwrite styles from Ticker component */
 .container > div[class='ticker'] {
   height: 4rem !important;
 }
