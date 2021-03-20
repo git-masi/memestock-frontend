@@ -1,5 +1,5 @@
 // Modules
-import React, { Fragment } from 'react';
+import React from 'react';
 import Ticker from 'react-ticker';
 
 // Styles
@@ -50,15 +50,17 @@ const stocksArray = [
 
 export default function StockTicker() {
   return (
-    <div className={styles.wrapper}>
-      <Ticker>
+    <section className={styles.container}>
+      <Ticker mode="await">
         {() => (
-          <div className={styles.tickerContainer}>
+          <>
             {stocksArray.map((stock) => {
               return (
-                <Fragment key={stock.id}>
-                  <h4 className={styles.stockTitle}>{stock.stockSymbol}</h4>
+                <article className={styles.stock} key={stock.id}>
+                  <h4>{stock.stockSymbol}</h4>
+
                   <p>{stock.stockPrice}</p>
+
                   {+stock.priceChange.replace('$', '') >= 0 ? (
                     <FontAwesomeIcon
                       icon={faSortUp}
@@ -70,14 +72,16 @@ export default function StockTicker() {
                       className={styles.downIcon}
                     />
                   )}
-                  {stock.priceChange}
+
+                  <p>{stock.priceChange}</p>
+
                   <p>"{stock.transactionMessage}"</p>
-                </Fragment>
+                </article>
               );
             })}
-          </div>
+          </>
         )}
       </Ticker>
-    </div>
+    </section>
   );
 }

@@ -1,33 +1,31 @@
-.wrapper {
-  margin-left: 55px;
-  width: 100vw;
+.container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: fit-content;
+  background: var(--dark-2);
+  color: var(--white);
 }
 
-.tickerContainer {
-  color: navy;
-  display: flex;
-  height: 120px;
-  background-color: var(--main);
-  margin-left: -2px;
+.container > div[class='ticker'] {
+  height: 4rem !important;
 }
 
-.tickerContainer > div {
-  margin: 10px 10px;
-  padding: 10px;
-  text-align: center;
-  background-color: var(--light-accent-2);
-  border-radius: 5px;
-  width: 200px;
+.stock {
+  display: inline-flex;
+  padding: 1rem;
 }
 
-.stockTitle {
-  font-weight: bold;
+.stock > * {
+  margin-right: 1rem;
 }
 
 .upIcon {
+  margin-right: 0;
   color: green;
 }
 
 .downIcon {
+  margin-right: 0;
   color: red;
 }
