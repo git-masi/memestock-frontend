@@ -5,6 +5,7 @@ html {
 :root {
   /* Utilities */
   --sidebar-width: 50px;
+  --main-box-vh: 80vh;
 
   /* Radius */
   --rounded: 8px;
