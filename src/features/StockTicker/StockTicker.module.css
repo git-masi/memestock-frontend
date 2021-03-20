@@ -12,6 +12,12 @@
   height: 4rem !important;
 }
 
+/* Overwrite styles from Ticker component */
+.container div[class='ticker__element'] {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+}
+
 .stock {
   display: inline-flex;
   padding: 1rem;
@@ -19,6 +25,7 @@
 
 .stock > * {
   margin-right: 1rem;
+  white-space: nowrap;
 }
 
 .upIcon {
