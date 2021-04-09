@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const globalLoaderSlice = createSlice({
-  name: 'showGlobalLoader',
+  name: "showGlobalLoader",
   initialState: false,
   reducers: {
     toggleLoader: (state) => !state,

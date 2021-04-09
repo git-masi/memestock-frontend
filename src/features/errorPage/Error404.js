@@ -1,8 +1,8 @@
 // Modules
-import React from 'react';
+import React from "react";
 
 // Styles
-import styles from './Error404.module.css';
+import styles from "./Error404.module.css";
 
 function Error404() {
   return (

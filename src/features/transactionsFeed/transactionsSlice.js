@@ -1,10 +1,10 @@
 // Modules
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 // Utils
-import { createFakeTransactions } from '../../utils/createFakeTransactions';
-import { mockApiResponse } from '../../utils/mockApiResponse';
-import { showLoader, hideLoader } from '../portal/globalLoaderSlice';
+import { createFakeTransactions } from "../../utils/createFakeTransactions";
+import { mockApiResponse } from "../../utils/mockApiResponse";
+import { showLoader, hideLoader } from "../portal/globalLoaderSlice";
 
 const initialState = {
   loading: false,
@@ -13,7 +13,7 @@ const initialState = {
 };
 
 export const transactionsSlice = createSlice({
-  name: 'transactions',
+  name: "transactions",
   initialState,
   reducers: {
     startFetchingTransactions: (state) => {

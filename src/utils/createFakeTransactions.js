@@ -1,8 +1,8 @@
-import { internet } from 'faker';
+import { internet } from "faker";
 
 // Utils
-import { createRandomId } from './createRandomId';
-import { getRandomIndex } from './getRandomIndex';
+import { createRandomId } from "./createRandomId";
+import { getRandomIndex } from "./getRandomIndex";
 
 export function createFakeTransactions(num = 10) {
   const transactions = [];
@@ -21,16 +21,16 @@ function createFakeTransaction() {
     message: createMessage(),
     buyerName: internet.userName(),
     sellerName: internet.userName(),
-    stock: { symbol: 'EXPL' },
+    stock: { symbol: "EXPL" },
   };
 }
 
 function createMessage() {
-  const emoji = ['💩', '💰', '💸', '🤑', '🚀', '💎'];
+  const emoji = ["💩", "💰", "💸", "🤑", "🚀", "💎"];
   const messages = [
-    'To the moon!',
-    'HODL GANG!',
-    'I like the stock!',
+    "To the moon!",
+    "HODL GANG!",
+    "I like the stock!",
     "Mo' money mo' problems",
   ];
   return `${messages[getRandomIndex(messages)]} ${
