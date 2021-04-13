@@ -19,6 +19,7 @@
     "react-ticker": "^1.2.2"
   },
   "scripts": {
+    "pretty": "prettier --write \"./**/*.{js,jsx,json}\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
