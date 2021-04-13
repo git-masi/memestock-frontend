@@ -1,15 +1,15 @@
 // Modules
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Redux Store
-import { fetchTransactions, selectAllTransactions } from "./transactionsSlice";
+import { fetchTransactions, selectAllTransactions } from './transactionsSlice';
 
 // Styles
-import styles from "./TransactionsFeed.module.css";
+import styles from './TransactionsFeed.module.css';
 
 // Components
-import Transaction from "./Transaction";
+import Transaction from './Transaction';
 
 function TransactionsFeed() {
   const dispatch = useDispatch();

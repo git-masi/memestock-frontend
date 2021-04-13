@@ -1,8 +1,8 @@
 // Modules
-import React from "react";
+import React from 'react';
 
 // Styles
-import styles from "./Loader.module.css";
+import styles from './Loader.module.css';
 
 function Loader(props) {
   const { children, heading } = props;
@@ -19,7 +19,7 @@ function Loader(props) {
         children
       ) : (
         <h3 className={styles.heading}>
-          {heading ? heading : "Processing..."}
+          {heading ? heading : 'Processing...'}
         </h3>
       )}
     </div>

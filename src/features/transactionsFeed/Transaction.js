@@ -1,11 +1,11 @@
 // Modules
-import React from "react";
+import React from 'react';
 
 // Utils
-import { getTotalString } from "../../utils/getTotalString";
+import { getTotalString } from '../../utils/getTotalString';
 
 // Styles
-import styles from "./Transaction.module.css";
+import styles from './Transaction.module.css';
 
 function Transaction(props) {
   const {

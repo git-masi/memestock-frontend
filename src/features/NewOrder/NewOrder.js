@@ -5,25 +5,25 @@
 // show display if match
 
 // imports
-import React, { useState, useRef } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useRef } from 'react';
+import { useForm } from 'react-hook-form';
 
 // Styles
-import styles from "./NewOrder.module.css";
+import styles from './NewOrder.module.css';
 
 // sample data
-const realMemeStocks = ["GMSK", "HYPE", "MEME", "MDPC", "OTHR"];
+const realMemeStocks = ['GMSK', 'HYPE', 'MEME', 'MDPC', 'OTHR'];
 const ownedStocks = [
   {
-    stockName: "GMSK",
+    stockName: 'GMSK',
     stockShares: 7,
   },
   {
-    stockName: "HYPE",
+    stockName: 'HYPE',
     stockShares: 23,
   },
   {
-    stockName: "MEME",
+    stockName: 'MEME',
     stockShares: 42,
   },
 ];
@@ -33,7 +33,7 @@ const totalCash = 5000.5;
 export default function NewOrder() {
   // use state for showing buy or sell info
 
-  const [showBuyForm, setShowBuyForm] = useState("true");
+  const [showBuyForm, setShowBuyForm] = useState('true');
 
   return (
     <div className={styles.formContainer}>
@@ -65,15 +65,15 @@ function BuyForm() {
   // const [showSearchSuggestions, setSearchSuggestions] = useState("true");
 
   const { register, handleSubmit, watch, reset, errors } = useForm({
-    mode: "onBlur",
-    reValidateMode: "onBlur",
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
   });
 
   const sharePrice = useRef({});
-  sharePrice.current = watch("price", "0.00");
+  sharePrice.current = watch('price', '0.00');
 
   const quantity = useRef({});
-  quantity.current = watch("quantity", "");
+  quantity.current = watch('quantity', '');
 
   let totalPrice = sharePrice.current * quantity.current;
 
@@ -99,10 +99,10 @@ function BuyForm() {
       <div>
         <input name="type" ref={register} defaultValue="buy" hidden />
 
-        {errors.symbol && errors.symbol.type === "validate" && (
+        {errors.symbol && errors.symbol.type === 'validate' && (
           <div className={styles.error}>Must match a 'real' memestock</div>
         )}
-        {errors.symbol && errors.symbol.type === "required" && (
+        {errors.symbol && errors.symbol.type === 'required' && (
           <div className={styles.error}>Ticker symbol must be entered</div>
         )}
         <label htmlFor="symbol">Stock Ticker Symbol</label>
@@ -119,10 +119,10 @@ function BuyForm() {
       </div>
 
       <div>
-        {errors.quantity && errors.quantity.type === "required" && (
+        {errors.quantity && errors.quantity.type === 'required' && (
           <div className={styles.error}>Quantity must be selected</div>
         )}
-        {errors.quantity && errors.quantity.type === "validate" && (
+        {errors.quantity && errors.quantity.type === 'validate' && (
           <div className={styles.error}>
             Cash remaining must be $0 or greater
           </div>
@@ -143,7 +143,7 @@ function BuyForm() {
       </div>
 
       <div>
-        {errors.price && errors.price.type === "required" && (
+        {errors.price && errors.price.type === 'required' && (
           <div className={styles.error}>Price must be selected</div>
         )}
         <label htmlFor="price">Order Share Price</label>
@@ -165,13 +165,13 @@ function BuyForm() {
         </div>
       </div>
       <div>
-        {errors.cashRemaining && errors.cashRemaining.type === "validate" && (
+        {errors.cashRemaining && errors.cashRemaining.type === 'validate' && (
           <div className={styles.error}>
             You don't have enough cash remaining
           </div>
         )}
         <div className={styles.tally}>
-          {" "}
+          {' '}
           Cash Remaining: ${cashRemaining.toFixed(2)}
         </div>
       </div>
@@ -184,8 +184,8 @@ function BuyForm() {
 function SellForm() {
   // variables
   const { register, handleSubmit, watch, reset, errors } = useForm({
-    mode: "onBlur",
-    reValidateMode: "onBlur",
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
   });
 
   const onSubmit = (data) => {
@@ -196,13 +196,13 @@ function SellForm() {
   const onErrors = (errors) => console.error(errors);
 
   const stock = useRef({});
-  stock.current = watch("stock");
+  stock.current = watch('stock');
 
   const sharePrice = useRef({});
-  sharePrice.current = watch("price", "0.00");
+  sharePrice.current = watch('price', '0.00');
 
   const quantity = useRef({});
-  quantity.current = watch("quantity", "");
+  quantity.current = watch('quantity', '');
 
   let totalPrice = sharePrice.current * quantity.current;
 
@@ -232,7 +232,7 @@ function SellForm() {
     >
       <div>
         <input name="type" ref={register} defaultValue="sell" hidden />
-        {errors.stock && errors.stock.type === "validate" && (
+        {errors.stock && errors.stock.type === 'validate' && (
           <div className={styles.error}>Select a stock</div>
         )}
         <label htmlFor="stock">Stock To Sell: </label>
@@ -241,7 +241,7 @@ function SellForm() {
           className={errors.stock ? styles.selectError : styles.select}
           ref={register({
             required: true,
-            validate: (value) => value !== "-select-",
+            validate: (value) => value !== '-select-',
           })}
         >
           <option disabled selected>
@@ -250,10 +250,10 @@ function SellForm() {
           {optionsArray}
         </select>
         <div>
-          {errors.quantity && errors.quantity.type === "required" && (
+          {errors.quantity && errors.quantity.type === 'required' && (
             <div className={styles.error}>Quantity must be selected</div>
           )}
-          {errors.quantity && errors.quantity.type === "validate" && (
+          {errors.quantity && errors.quantity.type === 'validate' && (
             <div className={styles.error}>
               You have exceeded your owned shares
             </div>
@@ -273,7 +273,7 @@ function SellForm() {
           ></input>
         </div>
         <div>
-          {errors.price && errors.price.type === "required" && (
+          {errors.price && errors.price.type === 'required' && (
             <div className={styles.error}>Price must be selected</div>
           )}
           <label htmlFor="price">Sell Price Per Share: $</label>
@@ -289,7 +289,7 @@ function SellForm() {
         <hr className={styles.hr}></hr>
         <div>
           <div className={styles.tally}>
-            {" "}
+            {' '}
             Total Price: ${totalPrice.toFixed(2)}
           </div>
         </div>

@@ -1,12 +1,12 @@
 // Modules
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 // Styles
-import styles from "./Sidebar.module.css";
+import styles from './Sidebar.module.css';
 
 // Components
-import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCommentsDollar,
   faHistory,
@@ -16,7 +16,7 @@ import {
   faChevronCircleLeft,
   faChevronCircleRight,
   faSignInAlt,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function Sidebar() {
   const [openSidebar, setOpenSidebar] = useState(false);
@@ -24,20 +24,20 @@ export default function Sidebar() {
   return (
     <div className={styles.container}>
       <div
-        className={[styles.wrapper, openSidebar ? styles.open : ""].join(" ")}
+        className={[styles.wrapper, openSidebar ? styles.open : ''].join(' ')}
       >
         {openSidebar ? (
           <FontAwesomeIcon
             icon={faChevronCircleLeft}
             onClick={() => setOpenSidebar(false)}
-            className={[styles.icon, styles.chevron].join(" ")}
+            className={[styles.icon, styles.chevron].join(' ')}
             size="2x"
           />
         ) : (
           <FontAwesomeIcon
             icon={faChevronCircleRight}
             onClick={() => setOpenSidebar(true)}
-            className={[styles.icon, styles.chevron].join(" ")}
+            className={[styles.icon, styles.chevron].join(' ')}
             size="2x"
           />
         )}
