@@ -4,9 +4,9 @@
   display: grid;
   grid-template-columns: auto min-content;
   grid-template-areas:
-    'name total'
-    'message message'
-    'details details';
+    "name total"
+    "message message"
+    "details details";
 
   border: 1px solid var(--black);
   border-radius: var(--rounded);
