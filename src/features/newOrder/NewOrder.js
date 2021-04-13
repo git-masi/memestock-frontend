@@ -33,7 +33,9 @@ const totalCash = 5000.5;
 export default function NewOrder() {
   // use state for showing buy or sell info
 
-  const [showBuyForm, setShowBuyForm] = useState('true');
+  const [showBuyForm, setShowBuyForm] = useState(true);
+
+  const toggleShowBuyForm = () => setShowBuyForm((prev) => !prev);
 
   return (
     <div className={styles.formContainer}>
@@ -42,7 +44,7 @@ export default function NewOrder() {
         <button
           className={styles.buybtn}
           disabled={showBuyForm}
-          onClick={() => setShowBuyForm(true)}
+          onClick={toggleShowBuyForm}
         >
           Buy
         </button>
@@ -50,7 +52,7 @@ export default function NewOrder() {
         <button
           className={styles.sellbtn}
           disabled={!showBuyForm}
-          onClick={() => setShowBuyForm(false)}
+          onClick={toggleShowBuyForm}
         >
           Sell
         </button>
