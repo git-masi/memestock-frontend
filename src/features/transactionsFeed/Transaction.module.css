@@ -1,12 +1,13 @@
 .transaction {
   margin-bottom: 2rem;
   padding: 1rem;
+  max-width: 600px;
   display: grid;
-  grid-template-columns: auto min-content;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-areas:
-    "name total"
-    "message message"
-    "details details";
+    'name total'
+    'message message'
+    'details date';
 
   border: 1px solid var(--black);
   border-radius: var(--rounded);
@@ -20,6 +21,7 @@
 
 .total {
   grid-area: total;
+  text-align: right;
 }
 
 .message {
@@ -32,6 +34,12 @@
 .details {
   grid-area: details;
   font-size: var(--small);
+}
+
+.date {
+  grid-area: date;
+  font-size: var(--small);
+  text-align: right;
 }
 
 @media screen and (min-width: 600px) {

@@ -1,10 +1,12 @@
 // Modules
 import { createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 // Utils
-import { createFakeTransactions } from '../../utils/createFakeTransactions';
-import { mockApiResponse } from '../../utils/mockApiResponse';
 import { showLoader, hideLoader } from '../portal/globalLoaderSlice';
+
+// Env vars
+const { REACT_APP_TRANSACTION_SERVICE_URL } = process.env;
 
 const initialState = {
   loading: false,
@@ -58,11 +60,14 @@ export function fetchTransactions() {
       if (data.length > 0) return;
 
       dispatch(startFetchingTransactions());
+
       dispatch(showLoader());
 
-      // todo: fetch real data
-      const dummyData = createFakeTransactions();
-      const orders = await mockApiResponse(dummyData);
+      const { data: orders } = await axios.get(
+        `${REACT_APP_TRANSACTION_SERVICE_URL}/transaction/many?limit=${10}&orderAsc=false`
+      );
+
+      console.log(orders);
 
       dispatch(addTransactions(orders));
     } catch (error) {
