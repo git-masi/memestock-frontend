@@ -1,5 +1,6 @@
 // Modules
 import React from 'react';
+import { format } from 'date-fns';
 
 // Utils
 import { getTotalString } from '../../utils/getTotalString';
@@ -7,13 +8,14 @@ import { getTotalString } from '../../utils/getTotalString';
 // Styles
 import styles from './Transaction.module.css';
 
-function Transaction(props) {
+export default function Transaction(props) {
   const {
     transaction: {
       message,
       buyer,
       seller,
       total,
+      created,
       stock: { tickerSymbol },
     },
   } = props;
@@ -25,8 +27,9 @@ function Transaction(props) {
       <p className={styles.details}>
         Purchased {tickerSymbol} from {seller.displayName}
       </p>
+      <p className={styles.date}>
+        {format(new Date(created), 'MMM d, y h:mm a')}
+      </p>
     </div>
   );
 }
-
-export default Transaction;
