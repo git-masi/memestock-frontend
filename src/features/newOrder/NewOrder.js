@@ -1,8 +1,3 @@
-//WORK ITEMS
-
-// Drop down suggestions for stock symbol input.
-// keep input value (watched) in state?
-// show display if match
 
 // imports
 import React, { useState, useRef } from 'react';
@@ -64,7 +59,6 @@ export default function NewOrder() {
 }
 
 function BuyForm() {
-  // const [showSearchSuggestions, setSearchSuggestions] = useState("true");
 
   const { register, handleSubmit, watch, reset, errors } = useForm({
     mode: 'onBlur',
@@ -77,9 +71,12 @@ function BuyForm() {
   const quantity = useRef({});
   quantity.current = watch('quantity', '');
 
-  let totalPrice = sharePrice.current * quantity.current;
+  const symbol = useRef({});
+  symbol.current = watch('symbol', '');
 
-  let cashRemaining = totalCash - totalPrice;
+  const totalPrice = sharePrice.current * quantity.current;
+
+  const cashRemaining = totalCash - totalPrice;
 
   const onSubmit = (data) => {
     console.log(data);
@@ -87,14 +84,58 @@ function BuyForm() {
   };
   console.log(errors);
 
-  function findMatch(value) {
-    for (var i = 0; i < realMemeStocks.length; i++) {
-      if (realMemeStocks[i] === value) {
-        i = realMemeStocks.length;
-        return value;
-      }
-    }
+// find search match for suggestion
+  function searchResults() {
+
+    // array of all matches
+    const found = realMemeStocks.filter(element => element.includes(symbol.current.toUpperCase()))
+
+    // clear out results
+    document.getElementById('searchResults').innerHTML = "";
+    
+    if (symbol.current !== "") {
+
+      // show results box
+      document.getElementById('searchResults').style.display = "flex";
+   
+        if (found.length < 1) {
+
+          const listItem = document.createElement('div');
+          listItem.innerHTML = "No results";
+          document.getElementById('searchResults').appendChild(listItem);
+            
+        } else {
+            
+            // display results
+            for (let i = 0; i < found.length; i++) {
+              const listItem = document.createElement('div');
+              listItem.innerHTML = found[i];
+              document.getElementById('searchResults').appendChild(listItem);
+            }
+        }
+      
+   } else {
+    document.getElementById('searchResults').style.display = "none";
+   }
+
   }
+
+  // update input with selection
+const showStockClick = event => {
+  // make sure parent can't be selected- rarely occurs
+  if (!event.target.innerHTML.includes('div')) {
+  // update input
+   document.getElementById('symbol').value = event.target.innerHTML;
+   symbol.current = event.target.innerHTML;
+  // clear error text
+  document.getElementById('symbol').click();
+  document.getElementById('symbol').blur();
+
+   // remove suggestion
+   document.getElementById('searchResults').style.display = "none";
+  }
+}
+
 
   return (
     <form className={styles.subFormContainer} onSubmit={handleSubmit(onSubmit)}>
@@ -112,12 +153,21 @@ function BuyForm() {
         <input
           className={errors.symbol ? styles.inputError : styles.input}
           name="symbol"
+          id="symbol"
           type="text"
+          autoComplete="off"
           ref={register({
             required: true,
-            validate: (value) => value === findMatch(value),
+            validate: (value) => realMemeStocks.includes(value.toUpperCase())
           })}
+          onKeyUp={searchResults}
         ></input>
+        <div 
+          className={styles.searchResults} 
+          id="searchResults"
+          onClick={showStockClick}
+          > 
+          </div>
       </div>
 
       <div>
@@ -137,6 +187,7 @@ function BuyForm() {
           type="number"
           step="1"
           min="1"
+          autoComplete="off"
           ref={register({
             required: true,
             validate: (value) => value * sharePrice.current < totalCash,
@@ -206,26 +257,24 @@ function SellForm() {
   const quantity = useRef({});
   quantity.current = watch('quantity', '');
 
-  let totalPrice = sharePrice.current * quantity.current;
+  const totalPrice = sharePrice.current * quantity.current;
+
+  // map to populate owned stocks list
+  const optionsArray = ownedStocks.map(x => <option>{x.stockName}</option>)
 
   // functions
-  let optionsArray = [];
-  function options() {
-    for (var i = 0; i < ownedStocks.length; i++) {
-      optionsArray[i] = <option>{ownedStocks[i].stockName}</option>;
-    }
-  }
-  options();
 
   function quantityCheck() {
     for (var i = 0; i < ownedStocks.length; i++) {
       if (ownedStocks[i].stockName === stock.current) {
         return ownedStocks[i].stockShares;
       } else {
-        return 999999;
+        return Infinity;
       }
     }
   }
+
+
 
   return (
     <form
