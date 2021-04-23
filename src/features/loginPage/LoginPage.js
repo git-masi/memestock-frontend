@@ -16,8 +16,82 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faUserPlus} from "@fortawesome/free-solid-svg-icons";
 
 export function SignUpPage() {
-  return (
-    <div>got it</div>
+
+  const { register, handleSubmit, watch, reset, errors } = useForm({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+  });
+
+  const onSignUpSubmit = (data) => {
+    console.log('onSignUpSubmit called', data);
+  }
+
+    return (
+    <form className={styles.subFormContainer} onSubmit={handleSubmit(onSignUpSubmit)}>
+      <input name="type" ref={register} defaultValue="wtf" hidden/>
+      <div className={styles.formContainer}>
+        <h3>Signing Up for MemeStock</h3>
+        <div className={styles.login_message}>
+          To signup, provide a username and password and you'll be good to go.
+          If your username has already been used, then you'll have to pick another one.
+        </div>
+        <div id="loginDiv">
+          {/*
+          {errors.username && errors.username.type === 'validate' && (
+            <div className={styles.error}>Enter your username</div>
+          )}
+*/}
+          <label htmlFor="username">Username:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input
+            name="username"
+            className={errors.username ? styles.inputError : styles.input}
+            ref={register({
+              required: true,
+              validate: (value) => value !== '-select-',
+            })}
+          />
+        </div>
+        <div id="passwordDiv">
+          {/*
+          {errors.username && errors.username.type === 'validate' && (
+            <div className={styles.error}>Enter your password</div>
+          )}
+*/}
+          <label htmlFor="username">Password:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input
+            name="username"
+            className={errors.username ? styles.inputError : styles.input}
+            ref={register({
+              required: true,
+              validate: (value) => value !== '-select-',
+            })}
+          />
+        </div>
+        <div id="passwordDiv">
+          {/*
+          {errors.username && errors.username.type === 'validate' && (
+            <div className={styles.error}>Enter your password</div>
+          )}
+*/}
+          <label htmlFor="username">Re-enter your password:&nbsp;&nbsp;</label>
+          <input
+            name="username"
+            className={errors.username ? styles.inputError : styles.input}
+            ref={register({
+              required: true,
+              validate: (value) => value !== '-select-',
+            })}
+          />
+        </div>
+        <div id="submit">
+          <input type="submit"
+                 disabled={Object.keys(errors).length > 0}
+                 value="Sign Up Now"
+                 className={styles.submit}
+          />
+        </div>
+      </div>
+    </form>
   );
 }
 
@@ -27,9 +101,12 @@ export function LoginPage() {
     reValidateMode: 'onBlur',
   });
 
+  const [userName, setUserName] = useState(''); // '' is the initial state value
+  const [password, setPassword] = useState(''); // '' is the initial state value
+
   const onSubmit = (data) => {
     console.log('onSubmit called');
-    axios.get('/user/login')
+    axios.post('/user/login', {username:  userName, password: password})
     .then(function (response) {
       // handle success
       // goto the "main page"
@@ -47,7 +124,7 @@ export function LoginPage() {
   };
 
   return (
-    <form className={styles.subFormContainer} onSubmit={onSubmit}>
+    <form className={styles.subFormContainer} onSubmit={handleSubmit(onSubmit)}>
       <input name="type" ref={register} defaultValue="wtf" hidden/>
       <div className={styles.formContainer}>
         <h1>Sign In</h1>
@@ -56,18 +133,18 @@ export function LoginPage() {
           If you don't have one, then sign up for free!
         </div>
         <div id="loginDiv">
-{/*
+
           {errors.username && errors.username.type === 'validate' && (
-            <div className={styles.error}>Enter your username</div>
+            <div className={styles.error}>Username's are required and must be 4 or more characters</div>
           )}
-*/}
+
           <label htmlFor="username">Username: </label>
           <input
             name="username"
             className={errors.username ? styles.inputError : styles.input}
             ref={register({
               required: true,
-              validate: (value) => value !== '-select-',
+              validate: (value) => (value !== '' && value.length > 3),
             })}
           />
         </div>
@@ -89,10 +166,9 @@ export function LoginPage() {
         </div>
         <div id="submit">
           <input type="submit"
-                 disabled={errors}
+                 disabled={Object.keys(errors).length > 0}
                  value="Sign In"
                  className={styles.submit}
-                 onClick={onSubmit}
           />
         </div>
         <div className={styles.signup_link}>

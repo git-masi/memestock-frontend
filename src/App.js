@@ -12,7 +12,7 @@ import GlobalLoader from './features/portal/GlobalLoader';
 import Sidebar from './features/sidebar/Sidebar';
 import NewOrder from './features/newOrder/NewOrder';
 import StockTicker from './features/stockTicker/StockTicker';
-import { LoginPage, SignUp } from "./features/loginPage/LoginPage";
+import { LoginPage, SignUpPage } from "./features/loginPage/LoginPage";
 
 function App() {
   return (
@@ -32,6 +32,9 @@ function App() {
 
             <Route path="/sign-in">
               <LoginPage />
+            </Route>
+            <Route path="/sign-up">
+              <SignUpPage />
             </Route>
 
             <Route path="/">

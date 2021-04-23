@@ -79,9 +79,9 @@ h1 {
 .buybtn,
 .sellbtn,
 .submit {
-  margin: 30px 90px 30px 90px;
+  margin-top: 30px;
+  margin-left: 22rem;
   height: 60px;
-  width: 120px;
   font-size: 28px;
   border-radius: 10px;
   color: var(--black);
