@@ -234,13 +234,13 @@ function SellForm() {
     >
       <div>
         <input name="type" ref={register} defaultValue="sell" hidden />
-        {errors.stock && errors.stock.type === 'validate' && (
-          <div className={styles.error}>Select a stock</div>
+        {errors.username && errors.username.type === 'validate' && (
+          <div className={styles.error}>Enter your username</div>
         )}
-        <label htmlFor="stock">Stock To Sell: </label>
+        <label htmlFor="username">Stock To Sell: </label>
         <select
-          name="stock"
-          className={errors.stock ? styles.selectError : styles.select}
+          name="username"
+          className={errors.username ? styles.usernameError : styles.select}
           ref={register({
             required: true,
             validate: (value) => value !== '-select-',
