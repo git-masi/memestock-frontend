@@ -21,18 +21,15 @@
   font-weight: bold;
 }
 
-
 input {
   min-width: 120px;
   border: 1px black solid;
 }
 
-
 h1 {
   margin: 10px auto;
   font-size: 40px;
   text-align: center;
-
 }
 
 .input,
@@ -87,7 +84,7 @@ h1 {
   color: var(--black);
 }
 
-#signup_link  {
+#signup_link {
   font-size: 10px;
 }
 
@@ -109,7 +106,6 @@ h1 {
 #faIcon {
   margin-left: 20px;
 }
-
 
 .signup_link {
   text-align: center;
