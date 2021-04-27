@@ -1,6 +1,6 @@
 
 // imports
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Styles
@@ -60,19 +60,48 @@ export default function NewOrder() {
 
 function BuyForm() {
 
-  const { register, handleSubmit, watch, reset, errors } = useForm({
+  const { register, handleSubmit, watch, reset, setValue, errors } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
+
+  // search auto suggestions
+  const [foundStocks, setFoundStocks] = useState([]);
+  
+  const symbol = watch('symbol', '');
+
+  const optionClicked = useRef(false)
+
+  const handleStockKeyPress = (e) => {
+    console.log("type")
+    optionClicked.current = false;
+  };
+
+  const handleStockSuggestClick = (e, value) => {
+    e.preventDefault();
+    optionClicked.current = true;
+    setValue("symbol", value);
+    setFoundStocks([]);
+  }
+
+  useEffect(() => {
+     if (!optionClicked.current) 
+      setFoundStocks(
+         symbol === ""
+          ? [] 
+         : realMemeStocks.filter((s) => s.startsWith(symbol.toUpperCase()))
+      );
+      console.log(foundStocks)
+    
+  }, [symbol]);
+
+  // other form variables/tracking
 
   const sharePrice = useRef({});
   sharePrice.current = watch('price', '0.00');
 
   const quantity = useRef({});
   quantity.current = watch('quantity', '');
-
-  const symbol = useRef({});
-  symbol.current = watch('symbol', '');
 
   const totalPrice = sharePrice.current * quantity.current;
 
@@ -83,59 +112,6 @@ function BuyForm() {
     reset();
   };
   console.log(errors);
-
-// find search match for suggestion
-  function searchResults() {
-
-    // array of all matches
-    const found = realMemeStocks.filter(element => element.includes(symbol.current.toUpperCase()))
-
-    // clear out results
-    document.getElementById('searchResults').innerHTML = "";
-    
-    if (symbol.current !== "") {
-
-      // show results box
-      document.getElementById('searchResults').style.display = "flex";
-   
-        if (found.length < 1) {
-
-          const listItem = document.createElement('div');
-          listItem.innerHTML = "No results";
-          document.getElementById('searchResults').appendChild(listItem);
-            
-        } else {
-            
-            // display results
-            for (let i = 0; i < found.length; i++) {
-              const listItem = document.createElement('div');
-              listItem.innerHTML = found[i];
-              document.getElementById('searchResults').appendChild(listItem);
-            }
-        }
-      
-   } else {
-    document.getElementById('searchResults').style.display = "none";
-   }
-
-  }
-
-  // update input with selection
-const showStockClick = event => {
-  // make sure parent can't be selected- rarely occurs
-  if (!event.target.innerHTML.includes('div')) {
-  // update input
-   document.getElementById('symbol').value = event.target.innerHTML;
-   symbol.current = event.target.innerHTML;
-  // clear error text
-  document.getElementById('symbol').click();
-  document.getElementById('symbol').blur();
-
-   // remove suggestion
-   document.getElementById('searchResults').style.display = "none";
-  }
-}
-
 
   return (
     <form className={styles.subFormContainer} onSubmit={handleSubmit(onSubmit)}>
@@ -153,20 +129,22 @@ const showStockClick = event => {
         <input
           className={errors.symbol ? styles.inputError : styles.input}
           name="symbol"
-          id="symbol"
           type="text"
           autoComplete="off"
           ref={register({
             required: true,
             validate: (value) => realMemeStocks.includes(value.toUpperCase())
           })}
-          onKeyUp={searchResults}
+          onKeyDown={handleStockKeyPress}
         ></input>
         <div 
           className={styles.searchResults} 
-          id="searchResults"
-          onClick={showStockClick}
           > 
+          {foundStocks.map((s) => (
+            <div key={s} onClick={(e) => handleStockSuggestClick(e, s)} >
+              {s}
+            </div>
+          ))}
           </div>
       </div>
 
@@ -239,6 +217,7 @@ function SellForm() {
   const { register, handleSubmit, watch, reset, errors } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
+    // tried changing this to 'onChange' and 'all' but did not address re-validation once autosuggestion is clicked
   });
 
   const onSubmit = (data) => {
