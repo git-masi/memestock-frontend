@@ -1,4 +1,3 @@
-
 // imports
 import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -59,7 +58,6 @@ export default function NewOrder() {
 }
 
 function BuyForm() {
-
   const { register, handleSubmit, watch, reset, setValue, errors } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -67,32 +65,31 @@ function BuyForm() {
 
   // search auto suggestions
   const [foundStocks, setFoundStocks] = useState([]);
-  
+
   const symbol = watch('symbol', '');
 
-  const optionClicked = useRef(false)
+  const optionClicked = useRef(false);
 
   const handleStockKeyPress = (e) => {
-    console.log("type")
+    console.log('type');
     optionClicked.current = false;
   };
 
   const handleStockSuggestClick = (e, value) => {
     e.preventDefault();
     optionClicked.current = true;
-    setValue("symbol", value);
+    setValue('symbol', value);
     setFoundStocks([]);
-  }
+  };
 
   useEffect(() => {
-     if (!optionClicked.current) 
+    if (!optionClicked.current)
       setFoundStocks(
-         symbol === ""
-          ? [] 
-         : realMemeStocks.filter((s) => s.startsWith(symbol.toUpperCase()))
+        symbol === ''
+          ? []
+          : realMemeStocks.filter((s) => s.startsWith(symbol.toUpperCase()))
       );
-      console.log(foundStocks)
-    
+    console.log(foundStocks);
   }, [symbol]);
 
   // other form variables/tracking
@@ -133,19 +130,23 @@ function BuyForm() {
           autoComplete="off"
           ref={register({
             required: true,
-            validate: (value) => realMemeStocks.includes(value.toUpperCase())
+            validate: (value) => realMemeStocks.includes(value.toUpperCase()),
           })}
           onKeyDown={handleStockKeyPress}
         ></input>
-        <div 
-          className={styles.searchResults} 
-          > 
+        <div className={styles.searchResults} onMouseDown={() => false}>
           {foundStocks.map((s) => (
-            <div key={s} onClick={(e) => handleStockSuggestClick(e, s)} >
+            <div
+              key={s}
+              onMouseDownCapture={(e) => {
+                e.preventDefault();
+                handleStockSuggestClick(e, s);
+              }}
+            >
               {s}
             </div>
           ))}
-          </div>
+        </div>
       </div>
 
       <div>
@@ -239,7 +240,7 @@ function SellForm() {
   const totalPrice = sharePrice.current * quantity.current;
 
   // map to populate owned stocks list
-  const optionsArray = ownedStocks.map(x => <option>{x.stockName}</option>)
+  const optionsArray = ownedStocks.map((x) => <option>{x.stockName}</option>);
 
   // functions
 
@@ -252,8 +253,6 @@ function SellForm() {
       }
     }
   }
-
-
 
   return (
     <form
