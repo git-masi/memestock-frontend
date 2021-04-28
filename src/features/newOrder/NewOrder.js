@@ -322,7 +322,7 @@ function SellForm() {
             Total Price: ${totalPrice.toFixed(2)}
           </div>
         </div>
-        ` ` <input type="submit" className={styles.submit} />
+        <input type="submit" className={styles.submit} />
       </div>
     </form>
   );
