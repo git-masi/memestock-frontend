@@ -37,6 +37,10 @@ function App() {
               <SignUpPage />
             </Route>
 
+            <Route path="/log-out">
+              <LoginPage logOut={true}/>
+            </Route>
+
             <Route path="/">
               <LoginPage />
             </Route>

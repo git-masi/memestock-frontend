@@ -1,14 +1,15 @@
 .formContainer,
 .subFormContainer {
   margin: 0px auto;
-  padding: 20px;
+  padding: auto;
   text-align: left;
   max-width: 90%;
+  width: 50rem;
 }
 
 .formContainer {
-  margin: 0 auto;
-  padding: 20px;
+  margin: 0px auto;
+  padding: 0px 0px 3rem 5rem;
   margin-top: 30px;
   background: var(--white);
   border-radius: var(--rounded);
@@ -24,6 +25,14 @@
 input {
   min-width: 120px;
   border: 1px black solid;
+}
+
+label {
+  display: block;
+}
+
+label > input {
+  align-content: flex-end;
 }
 
 h1 {
@@ -73,11 +82,9 @@ h1 {
   background-color: var(--main);
 }
 
-.buybtn,
-.sellbtn,
 .submit {
   margin-top: 30px;
-  margin-left: 22rem;
+  margin-left: 12rem;
   height: 60px;
   font-size: 28px;
   border-radius: 10px;
@@ -94,8 +101,9 @@ h1 {
   margin-bottom: 20px;
 }
 
-#signup_link > span {
+.signup_link {
   margin-right: 40px;
+  margin-top: 40px;
 }
 
 .error {

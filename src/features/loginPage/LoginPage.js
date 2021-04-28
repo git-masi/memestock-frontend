@@ -5,39 +5,42 @@
 // show display if match
 
 // Imports
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
-import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import {useForm} from 'react-hook-form';
+import {useDispatch} from 'react-redux';
+import {useHistory} from "react-router-dom";
 
 // Redux store
-import { updateUserInfo } from './userInfoSlice';
+import {updateUserInfo} from './userInfoSlice';
 
 // Styles
 import styles from './LoginPage.module.css';
 
 // Components
-import { NavLink } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import {NavLink} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faUserPlus} from '@fortawesome/free-solid-svg-icons';
 
-const { REACT_APP_USER_SERVICE_URL } = process.env;
+const {REACT_APP_USER_SERVICE_URL} = process.env;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 const usernameRegex = /[^\s]/;
 const emailRegex = /(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
 export function SignUpPage() {
-  const { register, handleSubmit, watch, reset, errors, setError } = useForm({
+  const {register, handleSubmit, watch, reset, errors, setError} = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
 
   const dispatch = useDispatch();
+  const history = useHistory();
+
 
   const onSignUpSubmit = async (data) => {
     try {
       console.log('onSignUpSubmit called', data);
-      const { username, email, password, passwordTwo } = data;
+      const {username, email, password, passwordTwo} = data;
       if (password !== passwordTwo) {
         setError('passwordTwo', {
           type: 'manual',
@@ -50,37 +53,54 @@ export function SignUpPage() {
       //   email: "test123@test.com"
       const signupResponse = await axios.post(
         `${REACT_APP_USER_SERVICE_URL}/user/signup`,
-        { username, email }
-      );
+        {username, email}
+      ).catch(error => {
+        setError('passwordTwo', {
+          type: 'manual',
+          message: 'Unexpected error, please refresh the page and try again.',
+        });
+      });
 
-      console.log(signupResponse);
-      const { accountStatus } = signupResponse.data;
+      console.log('signupResponse', signupResponse);
+      if (signupResponse) {
+        const {accountStatus} = signupResponse.data;
 
-      if (accountStatus === 'FORCE_CHANGE_PASSWORD') {
-        // Finish creating user by setting the password
-        const changePasswordResponse = await axios.post(
-          `${REACT_APP_USER_SERVICE_URL}/user/login`,
-          { username: email, password: 'NewpasS!23', newPassword: password }
-        );
-        console.log(changePasswordResponse);
-        const {
-          AccessToken: accessToken,
-          IdToken: idToken,
-          RefreshToken: refreshToken,
-        } = changePasswordResponse.data;
-        const payload = { accessToken, idToken, refreshToken, username, email };
-        dispatch(updateUserInfo(payload));
-        // Store token in session so other parts of app can get it
-        // data.AccessToken,
-        // data:
-        //   AccessToken: ""
-        //   ExpiresIn: 3600
-        //   IdToken: ""
-        //   RefreshToken: ""
-        //   TokenType: "Bearer"
+        if (accountStatus === 'FORCE_CHANGE_PASSWORD') {
+          // Finish creating user by setting the password
+          const changePasswordResponse = await axios.post(
+            `${REACT_APP_USER_SERVICE_URL}/user/login`,
+            {username: email, password: 'NewpasS!23', newPassword: password}
+          ).catch(error => {
+            setError('passwordTwo', {
+              type: 'manual',
+              message: 'Unexpected error, please refresh the page and try again.',
+            });
+          });
+          if (changePasswordResponse) {
+            console.log('Signup was successful.  changePasswordResponse=', changePasswordResponse);
+            // TODO: Refactor JSON response to use camelCase (on backend then remove this)
+            const {
+              AccessToken: accessToken,
+              IdToken: idToken,
+              RefreshToken: refreshToken,
+            } = changePasswordResponse.data;
+            const payload = {accessToken, idToken, refreshToken, username, email};
+            dispatch(updateUserInfo(payload));
+            // Store token in session so other parts of app can get it
+            // data.AccessToken,
+            // data:
+            //   AccessToken: ""
+            //   ExpiresIn: 3600
+            //   IdToken: ""
+            //   RefreshToken: ""
+            //   TokenType: "Bearer"
+
+            history.push("/feed");
+          }
+        }
       }
-    } catch (error) {
-      console.error(error);
+    } catch(error){
+      console.log('try/catch error', error);
     }
   };
 
@@ -118,6 +138,12 @@ export function SignUpPage() {
           />
         </label>
 
+        {
+          errors.email && (
+            <div className={styles.error}>Your password is missing or not formatted correctly.</div>
+          )
+        }
+
         <label>
           Email:
           <input
@@ -130,12 +156,11 @@ export function SignUpPage() {
             })}
           />
         </label>
-
-        {/*
-          {errors.username && errors.username.type === 'validate' && (
-            <div className={styles.error}>Enter your password</div>
-          )}
-          */}
+        {
+          errors.password && (
+            <div className={styles.error}>Your password is missing or not complex enough.  Must be 8 characters, 1 or more Upper, 1 or more lowercase and one or more number. </div>
+          )
+        }
         <label>
           Password:
           <input
@@ -149,26 +174,25 @@ export function SignUpPage() {
           />
         </label>
 
-        {/*
-          {errors.username && errors.username.type === 'validate' && (
-            <div className={styles.error}>Enter your password</div>
-          )}
-          */}
+        {
+          errors.passwordTwo &&  (
+            <div className={styles.error}>{errors.passwordTwo.message}</div>
+          )
+        }
         <label>
           Re-enter your password:
           <input
             name="passwordTwo"
             className={errors.passwordTwo ? styles.inputError : styles.input}
             ref={register({
-              required: true,
-              pattern: passwordRegex,
+              required: true
             })}
           />
         </label>
 
         <input
           type="submit"
-          disabled={Object.keys(errors).length > 0}
+          /*disabled={Object.keys(errors).length > 0}*/
           value="Sign Up Now"
           className={styles.submit}
         />
@@ -177,53 +201,84 @@ export function SignUpPage() {
   );
 }
 
-export function LoginPage() {
-  const { register, handleSubmit, watch, reset, errors } = useForm({
+export function LoginPage(args) {
+  const {register, handleSubmit, watch, reset, setError, errors} = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
 
-  const [userName, setUserName] = useState(''); // '' is the initial state value
-  const [password, setPassword] = useState(''); // '' is the initial state value
+  const dispatch = useDispatch();
+  const history = useHistory();
 
-  const onSubmit = (data) => {
-    console.log('onSubmit called');
-    axios
-      .post('/user/login', { username: userName, password: password })
-      .then(function (response) {
-        // handle success
-        // goto the "main page"
-        console.log('success', response);
-      })
-      .catch(function (error) {
-        // handle error
-        console.error('error', error);
-      })
-      .then(function () {
-        // always executed
-        console.log('always)');
+  if (args.logOut) {
+    dispatch(updateUserInfo({email: "", username: "", accessToken:"", idToken:"", refreshToken:""}));
+  }
+
+  const onSubmitLogin = async (data) => {
+    const {username, password} = data;
+
+    console.log('onSubmitLogin called', data);
+
+    try {
+      const loginResponse = await axios.post(
+        `${REACT_APP_USER_SERVICE_URL}/user/login`,
+        {username, password}
+      ).catch(function (error){
+        console.log('got axios error', error);
+        console.log(JSON.stringify(error,null,2));
+        console.log(JSON.stringify(errors,null,2));
+        setError('password', {
+          type: 'manual',
+          message: 'Username or Password is invalid (try again)',
+        })
       });
-    reset();
+
+      if (loginResponse) {
+        console.log("loginResponse", loginResponse);
+        // TODO: Refactor JSON response to use camelCase (on backend then remove this)
+        const {
+          AccessToken: accessToken,
+          IdToken: idToken,
+          RefreshToken: refreshToken,
+        } = loginResponse.data;
+        const payload = {accessToken, idToken, refreshToken, username};
+        dispatch(updateUserInfo(payload));
+        history.push("/feed");
+      } else {
+        reset();
+      }
+    } catch (error) {
+      console.error('Error with login', error);
+      setError('password', {
+        type: 'manual',
+        message: 'Username or Password is invalid (try again)',
+      });
+
+    }
   };
 
   return (
-    <form className={styles.subFormContainer} onSubmit={handleSubmit(onSubmit)}>
-      <input name="type" ref={register} defaultValue="wtf" hidden />
+    <form className={styles.subFormContainer} onSubmit={handleSubmit(onSubmitLogin)}>
       <div className={styles.formContainer}>
         <h1>Sign In</h1>
         <div className={styles.login_message}>
           Please enter your username and password below.
-          <br />
+          <br/>
           If you don't have one, then sign up for free!
         </div>
-        <div id="loginDiv">
-          {errors.username && errors.username.type === 'validate' && (
-            <div className={styles.error}>
-              Username's are required and must be 4 or more characters
-            </div>
-          )}
+        {errors.username &&  (
+          <div className={styles.error}>
+            Username's are required and must be 4 or more characters
+          </div>
+        )}
+        {errors.password && (
+          <div className={styles.error}>Your username or password is not valid</div>
+        )}
+        {errors.password && errors.password.message && (
+          <div className={styles.error}>{errors.password.message}</div>
+        )}
 
-          <label htmlFor="username">Username: </label>
+        <label htmlFor="username">Username:
           <input
             name="username"
             className={errors.username ? styles.inputError : styles.input}
@@ -232,27 +287,19 @@ export function LoginPage() {
               validate: (value) => value !== '' && value.length > 3,
             })}
           />
-        </div>
-        <div id="passwordDiv">
-          {/*
-          {errors.username && errors.username.type === 'validate' && (
-            <div className={styles.error}>Enter your password</div>
-          )}
-*/}
-          <label htmlFor="username">Password:&nbsp;&nbsp;</label>
+        </label>
+        <label>Password:&nbsp;&nbsp;
           <input
-            name="username"
-            className={errors.username ? styles.inputError : styles.input}
+            name="password"
+            className={errors.password ? styles.inputError : styles.input}
             ref={register({
-              required: true,
-              validate: (value) => value !== '-select-',
+              required: true
             })}
           />
-        </div>
+        </label>
         <div id="submit">
           <input
             type="submit"
-            disabled={Object.keys(errors).length > 0}
             value="Sign In"
             className={styles.submit}
           />
@@ -264,7 +311,7 @@ export function LoginPage() {
             className={styles.link}
             activeClassName={styles.active}
           >
-            <span>Sign Up</span>
+            <span>Click here to Sign Up</span>
             <FontAwesomeIcon
               icon={faUserPlus}
               className={styles.icon}
