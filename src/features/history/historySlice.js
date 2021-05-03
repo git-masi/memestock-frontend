@@ -5,7 +5,9 @@ const { REACT_APP_TRANSACTION_SERVICE_URL } = process.env;
 
 const initialState = {
   tranactionsPerPage: 10,
-  pages: {},
+  pages: {
+    1: [],
+  },
 };
 
 export const historySlice = createSlice({
@@ -15,7 +17,7 @@ export const historySlice = createSlice({
     init: (state, action) => {
       const { payload } = action;
       console.log(payload);
-      state.pages = payload.pages;
+      state.pages = payload;
     },
   },
 });
@@ -43,11 +45,13 @@ export function fetchTransactionsHistory() {
 
       const pages = createPages(numPages);
 
-      dispatch(init(pages));
+      const { data } = await axios.get(
+        `${REACT_APP_TRANSACTION_SERVICE_URL}/transaction/many?orderAsc=false&limit=${tranactionsPerPage}`
+      );
 
-      // const {} = await axios.get(
-      //   `${REACT_APP_TRANSACTION_SERVICE_URL}/transaction/many`
-      // );
+      pages['1'] = data;
+
+      dispatch(init(pages));
     } catch (error) {
       console.log(error);
     }
