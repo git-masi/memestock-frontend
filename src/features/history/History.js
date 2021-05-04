@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchTransactionsHistory } from './historySlice';
+import {
+  fetchPageForTransactionsHistory,
+  fetchTransactionsHistory,
+} from './historySlice';
+import PaginationControls from 'features/global/PaginationControls';
 
 export default function History() {
   const dispatch = useDispatch();
@@ -10,8 +14,11 @@ export default function History() {
   }, [dispatch]);
 
   return (
-    <div>
-      <h1>test</h1>
+    <div style={{ paddingLeft: '10rem' }}>
+      <PaginationControls
+        changeDisplayPage={fetchPageForTransactionsHistory}
+        paginationSelector={(state) => state.history}
+      />
     </div>
   );
 }
