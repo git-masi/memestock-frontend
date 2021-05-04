@@ -12,6 +12,7 @@ import GlobalLoader from './features/portal/GlobalLoader';
 import Sidebar from './features/sidebar/Sidebar';
 import NewOrder from './features/newOrder/NewOrder';
 import StockTicker from './features/stockTicker/StockTicker';
+import History from 'features/history/History';
 
 function App() {
   return (
@@ -21,12 +22,16 @@ function App() {
         <main className={styles.main}>
           <Sidebar />
           <Switch>
-            <Route path="/feed">
+            <Route exact path="/feed">
               <TransactionsFeed />
             </Route>
 
-            <Route path="/new-order">
+            <Route exact path="/new-order">
               <NewOrder />
+            </Route>
+
+            <Route exact path="/history">
+              <History />
             </Route>
 
             <Route path="/">
