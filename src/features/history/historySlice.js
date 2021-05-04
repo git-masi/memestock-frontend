@@ -29,11 +29,11 @@ export const historySlice = createSlice({
       const { payload } = action;
       const { pageNumber, data } = payload;
       state.pages[pageNumber] = data;
-      state.displayPage = pageNumber;
+      state.displayPage = +pageNumber;
     },
     changePage: (state, action) => {
       const { payload: pageNumber } = action;
-      state.displayPage = pageNumber;
+      state.displayPage = +pageNumber;
     },
   },
 });

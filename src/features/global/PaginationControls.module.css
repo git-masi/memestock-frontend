@@ -26,7 +26,6 @@
 }
 
 .currentPage {
-  color: #fff;
   background-color: var(--light-accent-2);
   border-color: var(--dark);
 }
