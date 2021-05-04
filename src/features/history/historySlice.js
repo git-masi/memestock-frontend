@@ -41,6 +41,9 @@ export const historySlice = createSlice({
 export const { init, addPage, changePage } = historySlice.actions;
 
 export const pagesSelector = (state) => state.history.pages;
+export const historySelector = (state) => state.history;
+export const currentPageSelector = (state) =>
+  state.history.pages[state.history.displayPage];
 
 export default historySlice.reducer;
 
