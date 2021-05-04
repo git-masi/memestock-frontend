@@ -10,7 +10,7 @@ export default function PaginationControls(props) {
   const { numPages, displayPage } = useSelector(paginationSelector);
   const dispatch = useDispatch();
   const isFirstPage = displayPage === 1;
-  const isLastPage = displayPage === numPages;
+  const isLastPage = displayPage === numPages || numPages === 0;
 
   const handleClick = (e) => {
     const value = e?.target?.value;
