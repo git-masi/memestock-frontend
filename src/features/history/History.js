@@ -7,6 +7,7 @@ import {
   currentPageSelector,
 } from './historySlice';
 import PaginationControls from 'features/global/PaginationControls';
+import Transaction from 'features/global/Transaction';
 
 export default function History() {
   const dispatch = useDispatch();
@@ -18,13 +19,13 @@ export default function History() {
 
   return (
     <div style={{ paddingLeft: '10rem' }}>
-      {transactions.length > 0 &&
-        transactions.map((t) => <p key={t.id}>{t.id}</p>)}
-
       <PaginationControls
         changeDisplayPage={fetchPageForTransactionsHistory}
         paginationSelector={historySelector}
       />
+
+      {transactions.length > 0 &&
+        transactions.map((t) => <Transaction key={t.id} transaction={t} />)}
     </div>
   );
 }
