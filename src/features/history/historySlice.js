@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const { REACT_APP_TRANSACTION_SERVICE_URL } = process.env;
+const tempToken =
+  'eyJraWQiOiIzeHhsNnRreU1KeHVCT3V0OStLdHFzOG9KYzVZbncyZUUyZTlcLzVVakg5RT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1MGNiNGQxMC04ZTI1LTRmMTUtYjU0MS1jMmY1Y2U3ZTQ0YTgiLCJldmVudF9pZCI6IjAxYWIxMmY1LTczOGQtNDExMC05NGJkLTc1YWU0Mjc2NWFiZCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE2MjAwOTIyNjAsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX3RWN2pSYVZ0VCIsImV4cCI6MTYyMDA5NTg2MCwiaWF0IjoxNjIwMDkyMjYwLCJqdGkiOiI4MmE2YmY1MS01N2JlLTQ2MWMtYWM1NS0wMTAyMGVhNmZlYmMiLCJjbGllbnRfaWQiOiJuYXByZWtzMDJhbWIybmFpMTgwMXNuOXY0IiwidXNlcm5hbWUiOiI1ODcwYTdjZC05YzAxLTQ5NjktYmQzYS1hMDQ5NzZhYzk0MjUifQ.G8ZtWpZNfbGoqo7Y5CbreYCWCc1KUtOExoB87Wm_3hY-8rqDel_rstqTWPI95GZhe31SbDLbu-OXaTAJAB3pGeVUSRHcCMDNnsK0IxJqX0A2TKh31BmWO8jrBvyfHvtWfhy1Nf8PxENuELmFrGqfRcSdXjmm5YX1vI2I59S4qUCC0eO_CZ1rmxRP-zXjjsEivCM6lIUuBTBh2RNgAIc6NyKkK6qmnOlnzrg_KKqPL6aNhirjjwAqOCq1X4fOEdiSoYfwkzhKfK6TRKoCWpKQUL7O5doW58_OkpVqxNLeyVam4tci2QC21cd4giLijKSMfcGRFvPXir_qDQthEFEtOA';
 
 const initialState = {
   transactionsPerPage: 10,
@@ -56,9 +58,11 @@ export function fetchTransactionsHistory() {
 
       const {
         data: { count },
-      } = await axios.get(
-        `${REACT_APP_TRANSACTION_SERVICE_URL}/transaction/count`
-      );
+      } = await axios.create({
+        baseUrl: `${REACT_APP_TRANSACTION_SERVICE_URL}/transaction/count`,
+        method: 'GET',
+        headers: { Authorizer: tempToken },
+      })();
 
       const numPages = count / transactionsPerPage;
 
