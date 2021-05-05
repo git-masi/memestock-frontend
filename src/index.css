@@ -46,6 +46,12 @@ html {
   --light-blue-gradient: linear-gradient(135deg, #5efce8 10%, #736efe 100%);
 }
 
+*,
+::before,
+::after {
+  margin: 0;
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
