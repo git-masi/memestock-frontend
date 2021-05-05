@@ -112,6 +112,13 @@ export default function Sidebar() {
           Settings
           <FontAwesomeIcon icon={faCog} className={styles.icon} size="2x" />
         </NavLink>
+        <NavLink
+          to="/log-out"
+          className={styles.link}
+          activeClassName={styles.active}
+        >
+          Log out
+        </NavLink>
       </div>
     </div>
   );

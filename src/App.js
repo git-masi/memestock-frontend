@@ -13,6 +13,7 @@ import Sidebar from './features/sidebar/Sidebar';
 import NewOrder from './features/newOrder/NewOrder';
 import StockTicker from './features/stockTicker/StockTicker';
 import History from 'features/history/History';
+import { LoginPage, SignUpPage } from "./features/loginPage/LoginPage";
 
 function App() {
   return (
@@ -34,8 +35,16 @@ function App() {
               <History />
             </Route>
 
+            <Route path="/sign-up">
+              <SignUpPage />
+            </Route>
+
+            <Route path="/log-out">
+              <LoginPage logOut={true}/>
+            </Route>
+
             <Route path="/">
-              <Error404 />
+              <LoginPage />
             </Route>
           </Switch>
           <StockTicker />

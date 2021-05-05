@@ -1,0 +1,126 @@
+.formContainer,
+.subFormContainer {
+  margin: 0px auto;
+  padding: auto;
+  text-align: left;
+  max-width: 90%;
+  width: 50rem;
+}
+
+.formContainer {
+  margin: 0px auto;
+  padding: 0px 0px 3rem 5rem;
+  margin-top: 30px;
+  background: var(--white);
+  border-radius: var(--rounded);
+  box-shadow: var(--basic-shadow);
+}
+
+.subFormContainer > div {
+  font-size: 18px;
+  /*text-align: right;*/
+  font-weight: bold;
+}
+
+input {
+  min-width: 120px;
+  border: 1px black solid;
+}
+
+label {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 3rem;
+}
+
+label > input {
+  align-content: flex-end;
+}
+
+h1 {
+  margin: 10px auto;
+  font-size: 40px;
+  text-align: center;
+}
+
+.input,
+.inputError {
+  width: 200px;
+  margin: 10px;
+  min-width: 200px;
+  height: 25px;
+  border-radius: 5px;
+}
+
+.username,
+.password {
+  /*placeholder*/
+}
+
+.inputError,
+.selectError {
+  border: 2px red solid;
+}
+
+.select,
+.selectError {
+  width: 100px;
+  margin: 10px;
+  padding: 6px 0px;
+  border-radius: 5px;
+}
+
+.hr {
+  border: 1px solid grey;
+}
+
+.buy {
+  width: 80px;
+  margin: 10px;
+}
+
+.submit {
+  float: center;
+  background-color: var(--main);
+}
+
+.submit {
+  margin-top: 30px;
+  margin-left: 12rem;
+  height: 60px;
+  font-size: 28px;
+  border-radius: 10px;
+  color: var(--black);
+}
+
+#signup_link {
+  font-size: 10px;
+}
+
+.login_message {
+  font-size: 14px;
+  color: darkblue;
+  margin-bottom: 20px;
+}
+
+.signup_link {
+  margin-right: 40px;
+  margin-top: 40px;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+#faIcon {
+  margin-left: 20px;
+}
+
+.signup_link {
+  text-align: center;
+}
+
+.icon {
+  margin-left: 10px;
+}
