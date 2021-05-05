@@ -9,7 +9,7 @@ import { fetchTransactions, selectAllTransactions } from './transactionsSlice';
 import styles from './TransactionsFeed.module.css';
 
 // Components
-import Transaction from './Transaction';
+import Transaction from '../global/Transaction';
 
 function TransactionsFeed() {
   const dispatch = useDispatch();

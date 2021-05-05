@@ -1,11 +1,5 @@
-//WORK ITEMS
-
-// Drop down suggestions for stock symbol input.
-// keep input value (watched) in state?
-// show display if match
-
 // imports
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Styles
@@ -64,12 +58,41 @@ export default function NewOrder() {
 }
 
 function BuyForm() {
-  // const [showSearchSuggestions, setSearchSuggestions] = useState("true");
-
-  const { register, handleSubmit, watch, reset, errors } = useForm({
+  const { register, handleSubmit, watch, reset, setValue, errors } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
+
+  // search auto suggestions
+  const [foundStocks, setFoundStocks] = useState([]);
+
+  const symbol = watch('symbol', '');
+
+  const optionClicked = useRef(false);
+
+  const handleStockKeyPress = (e) => {
+    console.log('type');
+    optionClicked.current = false;
+  };
+
+  const handleStockSuggestClick = (e, value) => {
+    e.preventDefault();
+    optionClicked.current = true;
+    setValue('symbol', value);
+    setFoundStocks([]);
+  };
+
+  useEffect(() => {
+    if (!optionClicked.current)
+      setFoundStocks(
+        symbol === ''
+          ? []
+          : realMemeStocks.filter((s) => s.startsWith(symbol.toUpperCase()))
+      );
+    console.log(foundStocks);
+  }, [symbol]);
+
+  // other form variables/tracking
 
   const sharePrice = useRef({});
   sharePrice.current = watch('price', '0.00');
@@ -77,24 +100,15 @@ function BuyForm() {
   const quantity = useRef({});
   quantity.current = watch('quantity', '');
 
-  let totalPrice = sharePrice.current * quantity.current;
+  const totalPrice = sharePrice.current * quantity.current;
 
-  let cashRemaining = totalCash - totalPrice;
+  const cashRemaining = totalCash - totalPrice;
 
   const onSubmit = (data) => {
     console.log(data);
     reset();
   };
   console.log(errors);
-
-  function findMatch(value) {
-    for (var i = 0; i < realMemeStocks.length; i++) {
-      if (realMemeStocks[i] === value) {
-        i = realMemeStocks.length;
-        return value;
-      }
-    }
-  }
 
   return (
     <form className={styles.subFormContainer} onSubmit={handleSubmit(onSubmit)}>
@@ -113,11 +127,26 @@ function BuyForm() {
           className={errors.symbol ? styles.inputError : styles.input}
           name="symbol"
           type="text"
+          autoComplete="off"
           ref={register({
             required: true,
-            validate: (value) => value === findMatch(value),
+            validate: (value) => realMemeStocks.includes(value.toUpperCase()),
           })}
+          onKeyDown={handleStockKeyPress}
         ></input>
+        <div className={styles.searchResults} onMouseDown={() => false}>
+          {foundStocks.map((s) => (
+            <div
+              key={s}
+              onMouseDownCapture={(e) => {
+                e.preventDefault();
+                handleStockSuggestClick(e, s);
+              }}
+            >
+              {s}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -137,6 +166,7 @@ function BuyForm() {
           type="number"
           step="1"
           min="1"
+          autoComplete="off"
           ref={register({
             required: true,
             validate: (value) => value * sharePrice.current < totalCash,
@@ -188,6 +218,7 @@ function SellForm() {
   const { register, handleSubmit, watch, reset, errors } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
+    // tried changing this to 'onChange' and 'all' but did not address re-validation once autosuggestion is clicked
   });
 
   const onSubmit = (data) => {
@@ -206,23 +237,19 @@ function SellForm() {
   const quantity = useRef({});
   quantity.current = watch('quantity', '');
 
-  let totalPrice = sharePrice.current * quantity.current;
+  const totalPrice = sharePrice.current * quantity.current;
+
+  // map to populate owned stocks list
+  const optionsArray = ownedStocks.map((x) => <option>{x.stockName}</option>);
 
   // functions
-  let optionsArray = [];
-  function options() {
-    for (var i = 0; i < ownedStocks.length; i++) {
-      optionsArray[i] = <option>{ownedStocks[i].stockName}</option>;
-    }
-  }
-  options();
 
   function quantityCheck() {
     for (var i = 0; i < ownedStocks.length; i++) {
       if (ownedStocks[i].stockName === stock.current) {
         return ownedStocks[i].stockShares;
       } else {
-        return 999999;
+        return Infinity;
       }
     }
   }
@@ -295,7 +322,7 @@ function SellForm() {
             Total Price: ${totalPrice.toFixed(2)}
           </div>
         </div>
-        ` ` <input type="submit" className={styles.submit} />
+        <input type="submit" className={styles.submit} />
       </div>
     </form>
   );

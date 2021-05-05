@@ -2,14 +2,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 // Reducers
-import transactions from '../features/transactionsFeed/transactionsSlice';
-import showGlobalLoader from '../features/portal/globalLoaderSlice';
-import userInfo from '../features/loginPage/userInfoSlice';
+import transactionsReducer from '../features/transactionsFeed/transactionsSlice';
+import globalLoaderReducer from '../features/portal/globalLoaderSlice';
+import history from '../features/history/historySlice';
 
 export default configureStore({
   reducer: {
-    transactions,
-    showGlobalLoader,
+    transactions: transactionsReducer,
+    showGlobalLoader: globalLoaderReducer,
+    history,
     userInfo,
   },
 });

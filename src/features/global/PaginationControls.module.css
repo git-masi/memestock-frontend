@@ -1,0 +1,70 @@
+.container {
+  margin: 1rem 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page,
+.arrow,
+.currentPage {
+  padding: 2px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--dark);
+  text-align: center;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--circle);
+  cursor: pointer;
+}
+.container {
+  margin: 1rem 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page,
+.arrow,
+.currentPage {
+  padding: 2px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--dark);
+  text-align: center;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--circle);
+  cursor: pointer;
+}
+
+.page:not(:last-child),
+.arrow:not(:last-child) {
+  margin-right: 10px;
+}
+
+.currentPage {
+  background-color: var(--light-accent-2);
+  border-color: var(--dark);
+}
+
+.page:focus,
+.arrow:focus,
+.currentPage:focus {
+  border: 2px solid var(--main);
+}
+
+.page,
+.currentPage {
+  cursor: initial;
+}
+
+.page:disabled,
+.arrow:disabled,
+.currentPage:disabled {
+  color: var(--gray);
+  cursor: not-allowed;
+}
