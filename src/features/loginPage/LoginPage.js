@@ -54,53 +54,54 @@ export function SignUpPage() {
       const signupResponse = await axios.post(
         `${REACT_APP_USER_SERVICE_URL}/user/signup`,
         {username, email}
-      ).catch(error => {
-        setError('passwordTwo', {
-          type: 'manual',
-          message: 'Unexpected error, please refresh the page and try again.',
-        });
-      });
+      );
 
       console.log('signupResponse', signupResponse);
-      if (signupResponse) {
-        const {accountStatus} = signupResponse.data;
+      const {accountStatus} = signupResponse.data;
 
-        if (accountStatus === 'FORCE_CHANGE_PASSWORD') {
-          // Finish creating user by setting the password
-          const changePasswordResponse = await axios.post(
-            `${REACT_APP_USER_SERVICE_URL}/user/login`,
-            {username: email, password: 'NewpasS!23', newPassword: password}
-          ).catch(error => {
-            setError('passwordTwo', {
-              type: 'manual',
-              message: 'Unexpected error, please refresh the page and try again.',
-            });
-          });
-          if (changePasswordResponse) {
-            console.log('Signup was successful.  changePasswordResponse=', changePasswordResponse);
-            // TODO: Refactor JSON response to use camelCase (on backend then remove this)
-            const {
-              AccessToken: accessToken,
-              IdToken: idToken,
-              RefreshToken: refreshToken,
-            } = changePasswordResponse.data;
-            const payload = {accessToken, idToken, refreshToken, username, email};
-            dispatch(updateUserInfo(payload));
-            // Store token in session so other parts of app can get it
-            // data.AccessToken,
-            // data:
-            //   AccessToken: ""
-            //   ExpiresIn: 3600
-            //   IdToken: ""
-            //   RefreshToken: ""
-            //   TokenType: "Bearer"
+      if (accountStatus === 'FORCE_CHANGE_PASSWORD') {
+        // Finish creating user by setting the password
+        const changePasswordResponse = await axios.post(
+          `${REACT_APP_USER_SERVICE_URL}/user/login`,
+          {username: email, password: 'NewpasS!23', newPassword: password}
+        );
+        if (changePasswordResponse) {
+          console.log('Signup was successful.  changePasswordResponse=', changePasswordResponse);
+          // TODO: Refactor JSON response to use camelCase (on backend then remove this)
+          const {
+            AccessToken: accessToken,
+            IdToken: idToken,
+            RefreshToken: refreshToken,
+          } = changePasswordResponse.data;
+          const payload = {accessToken, idToken, refreshToken, username, email};
+          dispatch(updateUserInfo(payload));
+          // Store token in session so other parts of app can get it
+          // data.AccessToken,
+          // data:
+          //   AccessToken: ""
+          //   ExpiresIn: 3600
+          //   IdToken: ""
+          //   RefreshToken: ""
+          //   TokenType: "Bearer"
 
-            history.push("/feed");
-          }
+          history.push("/feed");
+        } else {
+          console.log('request failed... changePasswordResponse=', changePasswordResponse);
         }
       }
     } catch(error){
-      console.log('try/catch error', error);
+      console.error('try/catch error', JSON.stringify(error,null, 4));
+      if (error && error.message && error.message.includes("status code 409")){
+        setError('username', {
+          type: 'manual',
+          message: 'Username already exists.  Please pick a different name.',
+        });
+      } else {
+        setError('username', {
+          type: 'manual',
+          message: 'Unexpected error, please refresh the page and try again. [' + error + ']',
+        });
+      }
     }
   };
 
@@ -118,11 +119,11 @@ export function SignUpPage() {
           another one.
         </div>
 
-        {/*
-          {errors.username && errors.username.type === 'validate' && (
-            <div className={styles.error}>Enter your username</div>
-          )}
-        */}
+        {
+          errors.username &&  (
+            <div className={styles.error}>{errors.username.message}</div>
+          )
+        }
 
         <label>
           Username:
@@ -165,6 +166,7 @@ export function SignUpPage() {
           Password:
           <input
             name="password"
+            type="password"
             className={errors.password ? styles.inputError : styles.input}
             ref={register({
               required: true,
@@ -183,6 +185,7 @@ export function SignUpPage() {
           Re-enter your password:
           <input
             name="passwordTwo"
+            type="password"
             className={errors.passwordTwo ? styles.inputError : styles.input}
             ref={register({
               required: true
@@ -223,15 +226,7 @@ export function LoginPage(args) {
       const loginResponse = await axios.post(
         `${REACT_APP_USER_SERVICE_URL}/user/login`,
         {username, password}
-      ).catch(function (error){
-        console.log('got axios error', error);
-        console.log(JSON.stringify(error,null,2));
-        console.log(JSON.stringify(errors,null,2));
-        setError('password', {
-          type: 'manual',
-          message: 'Username or Password is invalid (try again)',
-        })
-      });
+      );
 
       if (loginResponse) {
         console.log("loginResponse", loginResponse);
@@ -253,7 +248,6 @@ export function LoginPage(args) {
         type: 'manual',
         message: 'Username or Password is invalid (try again)',
       });
-
     }
   };
 
@@ -278,6 +272,7 @@ export function LoginPage(args) {
           <div className={styles.error}>{errors.password.message}</div>
         )}
 
+
         <label htmlFor="username">Username:
           <input
             name="username"
@@ -291,6 +286,7 @@ export function LoginPage(args) {
         <label>Password:&nbsp;&nbsp;
           <input
             name="password"
+            type="password"
             className={errors.password ? styles.inputError : styles.input}
             ref={register({
               required: true

@@ -35,6 +35,14 @@ function App() {
               <History />
             </Route>
 
+            <Route path="/sign-up">
+              <SignUpPage />
+            </Route>
+
+            <Route path="/log-out">
+              <LoginPage logOut={true}/>
+            </Route>
+
             <Route path="/">
               <LoginPage />
             </Route>
