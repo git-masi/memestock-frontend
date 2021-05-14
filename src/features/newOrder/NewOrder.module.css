@@ -14,10 +14,17 @@
   box-shadow: var(--basic-shadow);
 }
 
-.subFormContainer > div {
+.subFormContainer label {
   font-size: 20px;
   text-align: right;
   font-weight: bold;
+  display: inline-block;
+  width: 220px;
+  margin-right: 0px;
+}
+
+.subFormContainer input {
+  width: 100px;
 }
 
 input {
@@ -48,7 +55,7 @@ h1 {
 
 .select,
 .selectError {
-  width: 100px;
+  width: 120px;
   margin: 10px;
   padding: 6px 0px;
   border-radius: 5px;
@@ -56,6 +63,7 @@ h1 {
 
 .hr {
   border: 1px solid grey;
+  margin: 20px;
 }
 
 .buy {
@@ -83,6 +91,10 @@ h1 {
 .error {
   color: red;
   font-size: 14px;
+}
+
+#label {
+  display: inline;
 }
 
 .searchResults {
