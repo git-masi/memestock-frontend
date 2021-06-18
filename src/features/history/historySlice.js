@@ -58,12 +58,9 @@ export function fetchTransactionsHistory() {
 
       const {
         data: { count },
-      } = await axios.get(
-        `${REACT_APP_TRANSACTION_SERVICE_URL}/transaction/count`,
-        {
-          headers: { Authorization: tempToken },
-        }
-      );
+      } = await axios.get(`${REACT_APP_MEMESTOCK_API}/orders/count/fulfilled`, {
+        headers: { Authorization: tempToken },
+      });
 
       const numPages = count / transactionsPerPage;
 
