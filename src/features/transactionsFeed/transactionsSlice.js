@@ -6,7 +6,7 @@ import axios from 'axios';
 import { showLoader, hideLoader } from '../portal/globalLoaderSlice';
 
 // Env vars
-const { REACT_APP_TRANSACTION_SERVICE_URL } = process.env;
+const { REACT_APP_MEMESTOCK_API } = process.env;
 
 const initialState = {
   loading: false,
@@ -64,7 +64,7 @@ export function fetchTransactions() {
       dispatch(showLoader());
 
       const { data: orders } = await axios.get(
-        `${REACT_APP_TRANSACTION_SERVICE_URL}/transaction/many?limit=${10}&orderAsc=false`
+        `${REACT_APP_MEMESTOCK_API}/orders?limit=${10}&asc=false`
       );
 
       console.log(orders);
