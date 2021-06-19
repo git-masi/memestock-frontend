@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 // Redux store
-import { updateUserInfo } from './usersInfoSlice';
+import { updateUserInfo } from './userInfoSlice';
 
 // Styles
 import styles from './LoginPage.module.css';
