@@ -10,14 +10,7 @@ import styles from './Transaction.module.css';
 
 export default function Transaction(props) {
   const {
-    transaction: {
-      message,
-      buyer,
-      seller,
-      total,
-      created,
-      stock: { tickerSymbol },
-    },
+    transaction: { message = '', buyer, seller, total, created, tickerSymbol },
   } = props;
   return (
     <div className={styles.transaction}>
