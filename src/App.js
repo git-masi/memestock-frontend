@@ -13,9 +13,10 @@ import Sidebar from './features/sidebar/Sidebar';
 import NewOrder from './features/newOrder/NewOrder';
 import StockTicker from './features/stockTicker/StockTicker';
 import History from 'features/history/History';
-import { LoginPage, SignUpPage } from "./features/loginPage/LoginPage";
+import { LoginPage, SignUpPage } from './features/loginPage/LoginPage';
+import PrivateRoute from 'features/loginPage/PrivateRoute';
 
-function App() {
+export default function App() {
   return (
     <>
       <GlobalLoader />
@@ -23,28 +24,32 @@ function App() {
         <main className={styles.main}>
           <Sidebar />
           <Switch>
-            <Route exact path="/feed">
+            <PrivateRoute exact path="/feed">
               <TransactionsFeed />
-            </Route>
+            </PrivateRoute>
 
-            <Route exact path="/new-order">
+            <PrivateRoute exact path="/new-order">
               <NewOrder />
-            </Route>
+            </PrivateRoute>
 
-            <Route exact path="/history">
+            <PrivateRoute exact path="/history">
               <History />
-            </Route>
+            </PrivateRoute>
 
-            <Route path="/sign-up">
+            <Route exact path="/sign-up">
               <SignUpPage />
             </Route>
 
-            <Route path="/log-out">
-              <LoginPage logOut={true}/>
+            <Route exact path="/log-out">
+              <LoginPage logOut={true} />
+            </Route>
+
+            <Route exact path="/login">
+              <LoginPage />
             </Route>
 
             <Route path="/">
-              <LoginPage />
+              <Error404 />
             </Route>
           </Switch>
           <StockTicker />
@@ -53,5 +58,3 @@ function App() {
     </>
   );
 }
-
-export default App;
