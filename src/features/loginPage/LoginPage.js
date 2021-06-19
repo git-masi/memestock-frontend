@@ -1,18 +1,12 @@
-//WORK ITEMS
-
-// Drop down suggestions for stock symbol input.
-// keep input value (watched) in state?
-// show display if match
-
 // Imports
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, useHistory } from 'react-router-dom';
 
 // Redux store
-import { updateUserInfo } from './userInfoSlice';
+import { selectUserInfo, updateUserInfo } from './userInfoSlice';
 
 // Styles
 import styles from './LoginPage.module.css';
@@ -32,7 +26,10 @@ export function SignUpPage() {
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
-
+  const userInfo = useSelector(selectUserInfo());
+  const authorized = ['accessToken', 'refreshToken', 'idToken'].every(
+    (key) => !!userInfo[key]
+  );
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -120,99 +117,111 @@ export function SignUpPage() {
   };
 
   return (
-    <form
-      className={styles.subFormContainer}
-      onSubmit={handleSubmit(onSignUpSubmit)}
-    >
-      <div className={styles.formContainer}>
-        <h3>Signing Up for MemeStock</h3>
-
-        <div className={styles.login_message}>
-          To signup, provide a username and password and you'll be good to go.
-          If your username has already been used, then you'll have to pick
-          another one.
-        </div>
-
-        {errors.username && (
-          <div className={styles.error}>{errors.username.message}</div>
-        )}
-
-        <label>
-          Username:
-          <input
-            name="username"
-            type="text"
-            className={errors.username ? styles.inputError : styles.input}
-            ref={register({
-              required: true,
-              minLength: 4,
-              pattern: usernameRegex,
-            })}
-          />
-        </label>
-
-        {errors.email && (
-          <div className={styles.error}>
-            Your password is missing or not formatted correctly.
-          </div>
-        )}
-
-        <label>
-          Email:
-          <input
-            name="email"
-            type="email"
-            className={errors.email ? styles.inputError : styles.input}
-            ref={register({
-              required: true,
-              pattern: emailRegex,
-            })}
-          />
-        </label>
-        {errors.password && (
-          <div className={styles.error}>
-            Your password is missing or not complex enough. Must be 8
-            characters, 1 or more Upper, 1 or more lowercase and one or more
-            number.{' '}
-          </div>
-        )}
-        <label>
-          Password:
-          <input
-            name="password"
-            type="password"
-            className={errors.password ? styles.inputError : styles.input}
-            ref={register({
-              required: true,
-              minLength: 8,
-              pattern: passwordRegex,
-            })}
-          />
-        </label>
-
-        {errors.passwordTwo && (
-          <div className={styles.error}>{errors.passwordTwo.message}</div>
-        )}
-        <label>
-          Re-enter your password:
-          <input
-            name="passwordTwo"
-            type="password"
-            className={errors.passwordTwo ? styles.inputError : styles.input}
-            ref={register({
-              required: true,
-            })}
-          />
-        </label>
-
-        <input
-          type="submit"
-          /*disabled={Object.keys(errors).length > 0}*/
-          value="Sign Up Now"
-          className={styles.submit}
+    <>
+      {authorized ? (
+        <Redirect
+          to={{
+            pathname: '/feed',
+          }}
         />
-      </div>
-    </form>
+      ) : (
+        <form
+          className={styles.subFormContainer}
+          onSubmit={handleSubmit(onSignUpSubmit)}
+        >
+          <div className={styles.formContainer}>
+            <h3>Signing Up for MemeStock</h3>
+
+            <div className={styles.login_message}>
+              To signup, provide a username and password and you'll be good to
+              go. If your username has already been used, then you'll have to
+              pick another one.
+            </div>
+
+            {errors.username && (
+              <div className={styles.error}>{errors.username.message}</div>
+            )}
+
+            <label>
+              Username:
+              <input
+                name="username"
+                type="text"
+                className={errors.username ? styles.inputError : styles.input}
+                ref={register({
+                  required: true,
+                  minLength: 4,
+                  pattern: usernameRegex,
+                })}
+              />
+            </label>
+
+            {errors.email && (
+              <div className={styles.error}>
+                Your password is missing or not formatted correctly.
+              </div>
+            )}
+
+            <label>
+              Email:
+              <input
+                name="email"
+                type="email"
+                className={errors.email ? styles.inputError : styles.input}
+                ref={register({
+                  required: true,
+                  pattern: emailRegex,
+                })}
+              />
+            </label>
+            {errors.password && (
+              <div className={styles.error}>
+                Your password is missing or not complex enough. Must be 8
+                characters, 1 or more Upper, 1 or more lowercase and one or more
+                number.{' '}
+              </div>
+            )}
+            <label>
+              Password:
+              <input
+                name="password"
+                type="password"
+                className={errors.password ? styles.inputError : styles.input}
+                ref={register({
+                  required: true,
+                  minLength: 8,
+                  pattern: passwordRegex,
+                })}
+              />
+            </label>
+
+            {errors.passwordTwo && (
+              <div className={styles.error}>{errors.passwordTwo.message}</div>
+            )}
+            <label>
+              Re-enter your password:
+              <input
+                name="passwordTwo"
+                type="password"
+                className={
+                  errors.passwordTwo ? styles.inputError : styles.input
+                }
+                ref={register({
+                  required: true,
+                })}
+              />
+            </label>
+
+            <input
+              type="submit"
+              /*disabled={Object.keys(errors).length > 0}*/
+              value="Sign Up Now"
+              className={styles.submit}
+            />
+          </div>
+        </form>
+      )}
+    </>
   );
 }
 
@@ -221,7 +230,10 @@ export function LoginPage(args) {
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
-
+  const userInfo = useSelector(selectUserInfo());
+  const authorized = ['accessToken', 'refreshToken', 'idToken'].every(
+    (key) => !!userInfo[key]
+  );
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -272,72 +284,82 @@ export function LoginPage(args) {
   };
 
   return (
-    <form
-      className={styles.subFormContainer}
-      onSubmit={handleSubmit(onSubmitLogin)}
-    >
-      <div className={styles.formContainer}>
-        <h1>Sign In</h1>
-        <div className={styles.login_message}>
-          Please enter your username and password below.
-          <br />
-          If you don't have one, then sign up for free!
-        </div>
-        {errors.username && (
-          <div className={styles.error}>
-            Username's are required and must be 4 or more characters
-          </div>
-        )}
-        {errors.password && (
-          <div className={styles.error}>
-            Your username or password is not valid
-          </div>
-        )}
-        {errors.password && errors.password.message && (
-          <div className={styles.error}>{errors.password.message}</div>
-        )}
+    <>
+      {authorized ? (
+        <Redirect
+          to={{
+            pathname: '/feed',
+          }}
+        />
+      ) : (
+        <form
+          className={styles.subFormContainer}
+          onSubmit={handleSubmit(onSubmitLogin)}
+        >
+          <div className={styles.formContainer}>
+            <h1>Sign In</h1>
+            <div className={styles.login_message}>
+              Please enter your username and password below.
+              <br />
+              If you don't have one, then sign up for free!
+            </div>
+            {errors.username && (
+              <div className={styles.error}>
+                Username's are required and must be 4 or more characters
+              </div>
+            )}
+            {errors.password && (
+              <div className={styles.error}>
+                Your username or password is not valid
+              </div>
+            )}
+            {errors.password && errors.password.message && (
+              <div className={styles.error}>{errors.password.message}</div>
+            )}
 
-        <label htmlFor="username">
-          Username:
-          <input
-            name="username"
-            className={errors.username ? styles.inputError : styles.input}
-            ref={register({
-              required: true,
-              validate: (value) => value !== '' && value.length > 3,
-            })}
-          />
-        </label>
-        <label>
-          Password:&nbsp;&nbsp;
-          <input
-            name="password"
-            type="password"
-            className={errors.password ? styles.inputError : styles.input}
-            ref={register({
-              required: true,
-            })}
-          />
-        </label>
-        <div id="submit">
-          <input type="submit" value="Sign In" className={styles.submit} />
-        </div>
-        <div className={styles.signup_link}>
-          <span>Don't have a login? &nbsp;&nbsp;</span>
-          <NavLink
-            to="/sign-up"
-            className={styles.link}
-            activeClassName={styles.active}
-          >
-            <span>Click here to Sign Up</span>
-            <FontAwesomeIcon
-              icon={faUserPlus}
-              className={styles.icon}
-              size="1x"
-            />
-          </NavLink>
-        </div>
-      </div>
-    </form>
+            <label htmlFor="username">
+              Username:
+              <input
+                name="username"
+                className={errors.username ? styles.inputError : styles.input}
+                ref={register({
+                  required: true,
+                  validate: (value) => value !== '' && value.length > 3,
+                })}
+              />
+            </label>
+            <label>
+              Password:&nbsp;&nbsp;
+              <input
+                name="password"
+                type="password"
+                className={errors.password ? styles.inputError : styles.input}
+                ref={register({
+                  required: true,
+                })}
+              />
+            </label>
+            <div id="submit">
+              <input type="submit" value="Sign In" className={styles.submit} />
+            </div>
+            <div className={styles.signup_link}>
+              <span>Don't have a login? &nbsp;&nbsp;</span>
+              <NavLink
+                to="/sign-up"
+                className={styles.link}
+                activeClassName={styles.active}
+              >
+                <span>Click here to Sign Up</span>
+                <FontAwesomeIcon
+                  icon={faUserPlus}
+                  className={styles.icon}
+                  size="1x"
+                />
+              </NavLink>
+            </div>
+          </div>
+        </form>
+      )}
+    </>
   );
 }
