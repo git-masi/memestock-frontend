@@ -26,7 +26,7 @@ export function SignUpPage() {
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
-  const userInfo = useSelector(selectUserInfo());
+  const userInfo = useSelector(selectUserInfo);
   const authorized = ['accessToken', 'refreshToken', 'idToken'].every(
     (key) => !!userInfo[key]
   );
@@ -230,7 +230,7 @@ export function LoginPage(args) {
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
-  const userInfo = useSelector(selectUserInfo());
+  const userInfo = useSelector(selectUserInfo);
   const authorized = ['accessToken', 'refreshToken', 'idToken'].every(
     (key) => !!userInfo[key]
   );

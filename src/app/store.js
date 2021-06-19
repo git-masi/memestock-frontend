@@ -20,7 +20,7 @@ const prevSession = {};
 const prevUserInfo = localStorage.getItem('userInfo') ?? '';
 
 if (prevUserInfo) {
-  prevSession.userInfo = prevUserInfo;
+  prevSession.userInfo = JSON.parse(prevUserInfo);
 }
 
 if (!isEmpty(prevSession)) {
