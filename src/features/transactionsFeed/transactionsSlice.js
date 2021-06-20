@@ -31,7 +31,7 @@ export const transactionsSlice = createSlice({
       return {
         loading: false,
         hasError: false,
-        data: payload.concat(state.data),
+        data: state.data.concat(payload),
       };
     },
   },
