@@ -1,87 +1,76 @@
 // Modules
-import React from 'react';
-import Ticker from 'react-ticker';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 // Styles
 import styles from './StockTicker.module.css';
 
 // Components
+import Ticker from 'react-ticker';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { centsToDollars } from 'utils/money';
 
-// sample data
-const stocksArray = [
-  {
-    stockSymbol: 'GMSK',
-    stockPrice: '$102.31',
-    priceChange: '$-0.09',
-    transactionMessage: 'Buy and hold',
-    id: 'bd75dc21-bef6-4c90-ae3e-f1f9b26faff3',
-  },
-  {
-    stockSymbol: 'MDPC',
-    stockPrice: '$32.91',
-    priceChange: '$0.06',
-    transactionMessage: 'Sleeper',
-    id: 'ee93ca35-25fd-438a-bfa3-3f83d4298018',
-  },
-  {
-    stockSymbol: 'OTHR',
-    stockPrice: '$12.45',
-    priceChange: '$-0.20',
-    transactionMessage: 'Never know',
-    id: 'dbc3605c-d6d0-4138-8710-01f19eb1087d',
-  },
-  {
-    stockSymbol: 'HYPE',
-    stockPrice: '$112.05',
-    priceChange: '$0.49',
-    transactionMessage: 'Trending on Twitter',
-    id: '85f0e98d-ec8c-4392-970d-6fe050003c83',
-  },
-  {
-    stockSymbol: 'MEME',
-    stockPrice: '$286.76',
-    priceChange: '$0.98',
-    transactionMessage: 'To the moon',
-    id: '8a6f6bd1-ae10-4f58-81fd-55dad72d019e',
-  },
-];
+const { REACT_APP_MEMESTOCK_API } = process.env;
 
 export default function StockTicker() {
+  const [stocksArray, setStocksArray] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      const { data } = await axios({
+        method: 'GET',
+        url: `${REACT_APP_MEMESTOCK_API}/companies/stock-price`,
+      });
+
+      if (!cancelled) setStocksArray(data);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section className={styles.container}>
-      <Ticker mode="await">
-        {() => (
-          <>
-            {stocksArray.map((stock) => {
-              return (
-                <article className={styles.stock} key={stock.id}>
-                  <h4>{stock.stockSymbol}</h4>
+      {stocksArray.length > 0 && (
+        <Ticker mode="await">
+          {() => (
+            <>
+              {stocksArray.map((stock) => {
+                const priceChange =
+                  stock.currentPricePerShare - stock.previousPricePerShare;
 
-                  <p>{stock.stockPrice}</p>
+                return (
+                  <article className={styles.stock} key={stock.sk}>
+                    <h4>{stock.tickerSymbol}</h4>
 
-                  {+stock.priceChange.replace('$', '') >= 0 ? (
-                    <FontAwesomeIcon
-                      icon={faSortUp}
-                      className={styles.upIcon}
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={faSortDown}
-                      className={styles.downIcon}
-                    />
-                  )}
+                    <p>${centsToDollars(stock.currentPricePerShare)}</p>
 
-                  <p>{stock.priceChange}</p>
+                    {priceChange >= 0 ? (
+                      <FontAwesomeIcon
+                        icon={faSortUp}
+                        className={styles.upIcon}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faSortDown}
+                        className={styles.downIcon}
+                      />
+                    )}
 
-                  <p>"{stock.transactionMessage}"</p>
-                </article>
-              );
-            })}
-          </>
-        )}
-      </Ticker>
+                    <p>${centsToDollars(priceChange)}</p>
+
+                    <p>"{stock.fulfillmentMessage}"</p>
+                  </article>
+                );
+              })}
+            </>
+          )}
+        </Ticker>
+      )}
     </section>
   );
 }
