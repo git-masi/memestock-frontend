@@ -1,5 +1,5 @@
 // Modules
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Redux Store
@@ -11,13 +11,28 @@ import styles from './TransactionsFeed.module.css';
 // Components
 import Transaction from '../global/Transaction';
 
-function TransactionsFeed() {
+export default function TransactionsFeed() {
   const dispatch = useDispatch();
   const { data, hasError } = useSelector(selectAllTransactions);
+  const bottomEl = useRef(null);
 
   useEffect(() => {
-    dispatch(fetchTransactions());
-  }, [dispatch]);
+    const observedEl = bottomEl.current;
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 1,
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) dispatch(fetchTransactions());
+    }, options);
+
+    if (observedEl) observer.observe(observedEl);
+
+    return () => {
+      if (observedEl) observer.unobserve(observedEl);
+    };
+  }, [bottomEl]);
 
   return (
     <div className={styles.container}>
@@ -25,8 +40,8 @@ function TransactionsFeed() {
         data.map((t) => <Transaction key={t.sk} transaction={t} />)}
 
       {hasError && <p>Oh no! Something went wrong 😟</p>}
+
+      <div ref={bottomEl}></div>
     </div>
   );
 }
-
-export default TransactionsFeed;
