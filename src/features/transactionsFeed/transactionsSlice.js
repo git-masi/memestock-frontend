@@ -64,10 +64,8 @@ export function fetchTransactions() {
       dispatch(showLoader());
 
       const { data: orders } = await axios.get(
-        `${REACT_APP_MEMESTOCK_API}/orders?limit=${10}&asc=false`
+        `${REACT_APP_MEMESTOCK_API}/orders/feed?limit=${10}&asc=false&orderStatus=fulfilled`
       );
-
-      console.log(orders);
 
       dispatch(addTransactions(orders));
     } catch (error) {

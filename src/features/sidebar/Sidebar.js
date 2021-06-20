@@ -104,14 +104,14 @@ export default function Sidebar() {
           />
         </NavLink>
 
-        <NavLink
+        {/* <NavLink
           to="/settings"
           className={styles.link}
           activeClassName={styles.active}
         >
           Settings
           <FontAwesomeIcon icon={faCog} className={styles.icon} size="2x" />
-        </NavLink>
+        </NavLink> */}
         <NavLink
           to="/log-out"
           className={styles.link}

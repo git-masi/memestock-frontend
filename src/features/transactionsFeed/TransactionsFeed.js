@@ -22,7 +22,7 @@ function TransactionsFeed() {
   return (
     <div className={styles.container}>
       {data.length > 0 &&
-        data.map((t) => <Transaction key={t.id} transaction={t} />)}
+        data.map((t) => <Transaction key={t.sk} transaction={t} />)}
 
       {hasError && <p>Oh no! Something went wrong 😟</p>}
     </div>

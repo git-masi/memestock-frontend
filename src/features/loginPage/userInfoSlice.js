@@ -14,6 +14,7 @@ export const userInfoSlice = createSlice({
   reducers: {
     updateUserInfo: (state, action) => {
       const { payload } = action;
+      localStorage.setItem('userInfo', JSON.stringify(payload));
       return { ...state, ...payload };
     },
   },
@@ -21,6 +22,6 @@ export const userInfoSlice = createSlice({
 
 export const { updateUserInfo } = userInfoSlice.actions;
 
-export const selectUserInfo = (state) => state.UserInfo;
+export const selectUserInfo = (state) => state.userInfo;
 
 export default userInfoSlice.reducer;
