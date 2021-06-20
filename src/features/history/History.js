@@ -1,31 +1,22 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchPageForTransactionsHistory,
-  fetchTransactionsHistory,
-  historySelector,
-  currentPageSelector,
-} from './historySlice';
-import PaginationControls from 'features/global/PaginationControls';
+import { fetchOrderHistory, historySelector } from './historySlice';
 import Transaction from 'features/global/Transaction';
 
 export default function History() {
   const dispatch = useDispatch();
-  const transactions = useSelector(currentPageSelector);
+  const { hasError, data } = useSelector(historySelector);
 
   useEffect(() => {
-    dispatch(fetchTransactionsHistory(historySelector));
+    dispatch(fetchOrderHistory());
   }, [dispatch]);
 
   return (
     <div style={{ paddingLeft: '10rem' }}>
-      <PaginationControls
-        changeDisplayPage={fetchPageForTransactionsHistory}
-        paginationSelector={historySelector}
-      />
+      {data.length > 0 &&
+        data.map((t) => <Transaction key={t.id} transaction={t} />)}
 
-      {transactions.length > 0 &&
-        transactions.map((t) => <Transaction key={t.id} transaction={t} />)}
+      {hasError && <p>Oops, something went wrong 😕</p>}
     </div>
   );
 }
