@@ -32,7 +32,7 @@ export default function TransactionsFeed() {
     return () => {
       if (observedEl) observer.unobserve(observedEl);
     };
-  }, [bottomEl]);
+  }, [bottomEl, dispatch]);
 
   return (
     <div className={styles.container}>

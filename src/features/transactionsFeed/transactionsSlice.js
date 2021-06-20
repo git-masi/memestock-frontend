@@ -69,7 +69,7 @@ export function fetchTransactions() {
 
       const { data: orders } = await axios.get(url);
 
-      dispatch(addTransactions(orders));
+      if (orders?.length ?? -1 > 0) dispatch(addTransactions(orders));
     } catch (error) {
       console.log(error);
       dispatch(errorFetchingTransactions());
