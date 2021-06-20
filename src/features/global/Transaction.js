@@ -11,7 +11,7 @@ import styles from './Transaction.module.css';
 export default function Transaction(props) {
   const {
     transaction: {
-      message = '',
+      fulfillmentMessage = '',
       buyerDisplayName,
       sellerDisplayName,
       total,
@@ -23,7 +23,7 @@ export default function Transaction(props) {
     <div className={styles.transaction}>
       <h3 className={styles.name}>{buyerDisplayName}</h3>
       <p className={styles.total}>${centsToDollars(total)}</p>
-      <p className={styles.message}>&ldquo;{message}&rdquo;</p>
+      <p className={styles.message}>&ldquo;{fulfillmentMessage}&rdquo;</p>
       <p className={styles.details}>
         Purchased {tickerSymbol} from {sellerDisplayName}
       </p>
