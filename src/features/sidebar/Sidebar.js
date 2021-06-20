@@ -11,7 +11,7 @@ import {
   faCommentsDollar,
   faHistory,
   faPlusCircle,
-  faCog,
+  // faCog,
   faChartLine,
   faChevronCircleLeft,
   faChevronCircleRight,

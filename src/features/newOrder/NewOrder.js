@@ -90,7 +90,7 @@ function BuyForm() {
           : realMemeStocks.filter((s) => s.startsWith(symbol.toUpperCase()))
       );
     console.log(foundStocks);
-  }, [symbol]);
+  }, [symbol, foundStocks]);
 
   // other form variables/tracking
 
