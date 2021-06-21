@@ -13,6 +13,8 @@ export default function History() {
 
   return (
     <div style={{ paddingLeft: '10rem' }}>
+      <h1>History</h1>
+
       {data.length > 0 &&
         data.map((t) => <Transaction key={t.id} transaction={t} />)}
 

@@ -36,6 +36,8 @@ export default function TransactionsFeed() {
 
   return (
     <div className={styles.container}>
+      <h1>Feed</h1>
+
       {data.length > 0 &&
         data.map((t) => <Transaction key={t.sk} transaction={t} />)}
 
