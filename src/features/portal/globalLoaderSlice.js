@@ -10,11 +10,8 @@ export const globalLoaderSlice = createSlice({
   },
 });
 
-export const {
-  toggleLoader,
-  showLoader,
-  hideLoader,
-} = globalLoaderSlice.actions;
+export const { toggleLoader, showLoader, hideLoader } =
+  globalLoaderSlice.actions;
 
 export const currentGlobalLoaderState = (state) => state.showGlobalLoader;
 

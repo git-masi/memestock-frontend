@@ -77,35 +77,37 @@ function BuyForm(props) {
   const { user, companies } = props;
   const [stocksFound, setStocksFound] = useState([]);
   const { register, handleSubmit, watch, setValue } = useForm({
-    mode: "onBlur",
-    reValidateMode: "onBlur"
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
   });
   const optionSelected = useRef(false);
 
-  const stockInput = watch("stock", "");
+  const stockInput = watch('stock', '');
 
   console.log(stockInput);
 
   const onSubmit = (data) => console.log(data);
 
   const handleStockInputKeyDown = (e) => {
-    console.log("key press");
+    console.log('key press');
     optionSelected.current = false;
   };
 
   const handleStockSuggestionClick = (e, value) => {
     e.preventDefault();
     optionSelected.current = true;
-    setValue("stock", value);
+    setValue('stock', value);
     setStocksFound([]);
   };
 
   useEffect(() => {
     if (!optionSelected.current)
       setStocksFound(
-        stockInput === ""
+        stockInput === ''
           ? []
-          : companies.map(c => c.tickerSymbol).filter((s) => s.startsWith(stockInput.toUpperCase()))
+          : companies
+              .map((c) => c.tickerSymbol)
+              .filter((s) => s.startsWith(stockInput.toUpperCase()))
       );
   }, [stockInput]);
 
@@ -137,8 +139,8 @@ function BuyForm(props) {
 function SellForm(props) {
   const { user, companies } = props;
   const { register, handleSubmit } = useForm({
-    mode: "onBlur",
-    reValidateMode: "onBlur"
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
   });
 
   const onSubmit = (data) => console.log(data);
@@ -150,7 +152,11 @@ function SellForm(props) {
       <label>
         Stock:
         <select name="stock" ref={register}>
-        {companies.map(({tickerSymbol}) => (<option key={tickerSymbol} value={tickerSymbol}>{tickerSymbol}</option>))}
+          {companies.map(({ tickerSymbol }) => (
+            <option key={tickerSymbol} value={tickerSymbol}>
+              {tickerSymbol}
+            </option>
+          ))}
         </select>
       </label>
 
