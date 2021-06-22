@@ -212,11 +212,18 @@ function BuyForm(props) {
 }
 
 function SellForm(props) {
-  const { user, companies } = props;
-  const { register, handleSubmit } = useForm({
+  const { user } = props;
+  const { register, handleSubmit, watch } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
+  const userStocks = Object.keys(user?.stocks ?? {});
+  const tickerSymbol = watch('tickerSymbol', userStocks[0]);
+  const quantity = watch('quantity', '0');
+  const price = watch('price', '0');
+  const total = (quantity * price).toFixed(2);
+  const quantityOnHand = user?.stocks?.[tickerSymbol]?.quantityOnHand;
+  const quantityRemaining = +quantityOnHand - +quantity;
 
   const onSubmit = (data) => console.log(data);
 
@@ -226,8 +233,8 @@ function SellForm(props) {
 
       <label>
         Stock:
-        <select name="stock" ref={register}>
-          {companies.map(({ tickerSymbol }) => (
+        <select name="tickerSymbol" ref={register}>
+          {userStocks.map((tickerSymbol) => (
             <option key={tickerSymbol} value={tickerSymbol}>
               {tickerSymbol}
             </option>
@@ -235,7 +242,37 @@ function SellForm(props) {
         </select>
       </label>
 
-      <button type="submit">Submit</button>
+      <label>
+        Quantity
+        <input
+          name="quantity"
+          type="number"
+          step="1"
+          min="1"
+          autoComplete="off"
+          ref={register({ required: true })}
+        ></input>
+      </label>
+
+      <label>
+        Price Per Share
+        <input
+          name="price"
+          min="0.01"
+          type="number"
+          step="0.01"
+          autoComplete="off"
+          ref={register({ required: true })}
+        ></input>
+      </label>
+
+      <h3>Total: ${total}</h3>
+      <p>Available quantity: {quantityOnHand}</p>
+      <p>Quantity remaining: {quantityRemaining}</p>
+
+      <button type="submit" disabled={quantityRemaining < 0}>
+        Submit
+      </button>
     </form>
   );
 }
