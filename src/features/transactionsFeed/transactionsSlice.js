@@ -31,7 +31,7 @@ export const transactionsSlice = createSlice({
       return {
         loading: false,
         hasError: false,
-        data: payload.concat(state.data),
+        data: state.data.concat(payload),
       };
     },
   },
@@ -51,23 +51,25 @@ export default transactionsSlice.reducer;
 export function fetchTransactions() {
   return async (dispatch, getState) => {
     try {
-      // Think of transactions like a cache
-      // This is guard to prevent re-fetching transactions if we already have some
       const currState = getState();
       const {
         transactions: { data },
       } = currState;
-      if (data.length > 0) return;
 
       dispatch(startFetchingTransactions());
 
       dispatch(showLoader());
 
-      const { data: orders } = await axios.get(
-        `${REACT_APP_MEMESTOCK_API}/orders/feed?limit=${10}&asc=false&orderStatus=fulfilled`
-      );
+      let url = `${REACT_APP_MEMESTOCK_API}/orders/feed?limit=${10}&asc=false&orderStatus=fulfilled`;
 
-      dispatch(addTransactions(orders));
+      if (data.length > 0) {
+        const lastOrder = data[data.length - 1];
+        url = url + `&startSk=${lastOrder.sk}`;
+      }
+
+      const { data: orders } = await axios.get(url);
+
+      if (orders?.length ?? -1 > 0) dispatch(addTransactions(orders));
     } catch (error) {
       console.log(error);
       dispatch(errorFetchingTransactions());

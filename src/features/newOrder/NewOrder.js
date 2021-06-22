@@ -1,35 +1,48 @@
 // imports
+import axios from 'axios';
 import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import { centsToDollars } from 'utils/money';
+
+// Redux store
+import { selectUserInfo } from '../loginPage/userInfoSlice';
 
 // Styles
 import styles from './NewOrder.module.css';
 
-// sample data
-const realMemeStocks = ['GMSK', 'HYPE', 'MEME', 'MDPC', 'OTHR'];
-const ownedStocks = [
-  {
-    stockName: 'GMSK',
-    stockShares: 7,
-  },
-  {
-    stockName: 'HYPE',
-    stockShares: 23,
-  },
-  {
-    stockName: 'MEME',
-    stockShares: 42,
-  },
-];
-
-const totalCash = 5000.5;
+const { REACT_APP_MEMESTOCK_API } = process.env;
 
 export default function NewOrder() {
-  // use state for showing buy or sell info
-
   const [showBuyForm, setShowBuyForm] = useState(true);
+  const [user, setUser] = useState({});
+  const [companies, setCompanies] = useState({});
+  const { accessToken } = useSelector(selectUserInfo);
 
   const toggleShowBuyForm = () => setShowBuyForm((prev) => !prev);
+
+  useEffect(() => {
+    (async () => {
+      const { data: userData } = await axios({
+        method: 'GET',
+        url: `${REACT_APP_MEMESTOCK_API}/users`,
+        headers: {
+          Authorization: accessToken,
+        },
+      });
+
+      const { data: companyData } = await axios({
+        method: 'GET',
+        url: `${REACT_APP_MEMESTOCK_API}/companies`,
+        // headers: {
+        //   Authorization: accessToken,
+        // },
+      });
+
+      setUser(userData);
+      setCompanies(companyData);
+    })();
+  }, [accessToken]);
 
   return (
     <div className={styles.formContainer}>
@@ -52,116 +65,141 @@ export default function NewOrder() {
         </button>
       </div>
 
-      {showBuyForm ? <BuyForm /> : <SellForm />}
+      {showBuyForm ? (
+        <BuyForm {...{ user, companies, accessToken }} />
+      ) : (
+        <SellForm {...{ user, companies, accessToken }} />
+      )}
     </div>
   );
 }
 
-function BuyForm() {
-  const { register, handleSubmit, watch, reset, setValue, errors } = useForm({
+function BuyForm(props) {
+  const { user, companies, accessToken } = props;
+  const [stocksFound, setStocksFound] = useState([]);
+  const { register, handleSubmit, watch, setValue } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
+  const tickerSymbol = watch('tickerSymbol', '');
+  const quantity = watch('quantity', '0');
+  const price = watch('price', '0');
+  const total = (quantity * price).toFixed(2);
+  const cashOnHand = centsToDollars(user.cashOnHand);
+  const cashRemaining = (cashOnHand - total).toFixed(2);
+  const optionSelected = useRef(false);
+  const tickerSymbolInput = useRef(null);
+  const tickerSymbolBlurTimeout = useRef(null);
 
-  // search auto suggestions
-  const [foundStocks, setFoundStocks] = useState([]);
+  register(tickerSymbolInput.current, { required: true });
 
-  const symbol = watch('symbol', '');
+  const onSubmit = async (data) => {
+    try {
+      const { quantity, price } = data;
+      const reqTotal = Math.round(+price * 100) * +quantity;
+      const reqBody = {
+        user: user.sk,
+        total: reqTotal,
+        orderType: data.orderType,
+        quantity: +quantity,
+        tickerSymbol: data.tickerSymbol,
+      };
 
-  const optionClicked = useRef(false);
+      await axios({
+        method: 'POST',
+        url: `${REACT_APP_MEMESTOCK_API}/orders`,
+        data: reqBody,
+        headers: {
+          Authorization: accessToken,
+        },
+      });
 
-  const handleStockKeyPress = (e) => {
-    console.log('type');
-    optionClicked.current = false;
+      // There is probably a better way to handle this by calling
+      // the reset method in react-hook-form
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleStockSuggestClick = (e, value) => {
+  const handleStockInputKeyDown = (e) => {
+    optionSelected.current = false;
+  };
+
+  const handleStockSuggestionClick = (e, value) => {
     e.preventDefault();
-    optionClicked.current = true;
-    setValue('symbol', value);
-    setFoundStocks([]);
+    e.stopPropagation();
+    clearTimeout(tickerSymbolBlurTimeout.current);
+    tickerSymbolInput.current.focus();
+    optionSelected.current = true;
+    setValue('tickerSymbol', value);
+    setStocksFound([]);
+  };
+
+  const handleTickerSymbolBlur = () => {
+    // Calling setStocksFound([]) essentially dismisses the suggestions
+    // But the blur event is called before the suggestion button click event
+    // so by using a timeout we can dismiss the blur
+    // However, this is not the most riliable solution if the call stack
+    // has a lot going on
+    tickerSymbolBlurTimeout.current = setTimeout(() => {
+      setStocksFound([]);
+      optionSelected.current = false;
+    }, 50);
   };
 
   useEffect(() => {
-    if (!optionClicked.current)
-      setFoundStocks(
-        symbol === ''
+    if (!optionSelected.current)
+      setStocksFound(
+        tickerSymbol === ''
           ? []
-          : realMemeStocks.filter((s) => s.startsWith(symbol.toUpperCase()))
+          : companies
+              .map((c) => c.tickerSymbol)
+              .filter((s) => s.startsWith(tickerSymbol.toUpperCase()))
       );
-    console.log(foundStocks);
-  }, [symbol]);
-
-  // other form variables/tracking
-
-  const sharePrice = useRef({});
-  sharePrice.current = watch('price', '0.00');
-
-  const quantity = useRef({});
-  quantity.current = watch('quantity', '');
-
-  const totalPrice = sharePrice.current * quantity.current;
-
-  const cashRemaining = totalCash - totalPrice;
-
-  const onSubmit = (data) => {
-    console.log(data);
-    reset();
-  };
-  console.log(errors);
+  }, [tickerSymbol, companies]);
 
   return (
-    <form className={styles.subFormContainer} onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <input name="type" ref={register} defaultValue="buy" hidden />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input name="orderType" ref={register} defaultValue="buy" hidden />
 
-        {errors.symbol && errors.symbol.type === 'validate' && (
-          <div className={styles.error}>Must match a 'real' memestock</div>
-        )}
-        {errors.symbol && errors.symbol.type === 'required' && (
-          <div className={styles.error}>Ticker symbol must be entered</div>
-        )}
-        <label htmlFor="symbol">Stock Ticker Symbol</label>
+      <div className={styles.stockWrapper}>
+        <label>
+          Stock Ticker
+          <input
+            autoComplete="off"
+            name="tickerSymbol"
+            ref={tickerSymbolInput}
+            onKeyDown={handleStockInputKeyDown}
+            onBlur={handleTickerSymbolBlur}
+          />
+        </label>
 
-        <input
-          className={errors.symbol ? styles.inputError : styles.input}
-          name="symbol"
-          type="text"
-          autoComplete="off"
-          ref={register({
-            required: true,
-            validate: (value) => realMemeStocks.includes(value.toUpperCase()),
-          })}
-          onKeyDown={handleStockKeyPress}
-        ></input>
-        <div className={styles.searchResults} onMouseDown={() => false}>
-          {foundStocks.map((s) => (
-            <div
+        <div
+          className={[
+            styles.suggestionContainer,
+            stocksFound.length < 1 ? styles.hide : '',
+          ].join(' ')}
+        >
+          {stocksFound.map((s) => (
+            <button
               key={s}
-              onMouseDownCapture={(e) => {
-                e.preventDefault();
-                handleStockSuggestClick(e, s);
+              value={s}
+              onClick={(e) => {
+                handleStockSuggestionClick(e, s);
               }}
+              onFocus={() => clearTimeout(tickerSymbolBlurTimeout.current)}
+              onBlur={handleTickerSymbolBlur}
             >
               {s}
-            </div>
+            </button>
           ))}
         </div>
       </div>
 
-      <div>
-        {errors.quantity && errors.quantity.type === 'required' && (
-          <div className={styles.error}>Quantity must be selected</div>
-        )}
-        {errors.quantity && errors.quantity.type === 'validate' && (
-          <div className={styles.error}>
-            Cash remaining must be $0 or greater
-          </div>
-        )}
-        <label htmlFor="quantity">Quantity</label>
-
+      <label>
+        Quantity
         <input
-          className={errors.quantity ? styles.inputError : styles.input}
           name="quantity"
           type="number"
           step="1"
@@ -169,161 +207,99 @@ function BuyForm() {
           autoComplete="off"
           ref={register({
             required: true,
-            validate: (value) => value * sharePrice.current < totalCash,
           })}
         ></input>
-      </div>
+      </label>
 
-      <div>
-        {errors.price && errors.price.type === 'required' && (
-          <div className={styles.error}>Price must be selected</div>
-        )}
-        <label htmlFor="price">Order Share Price</label>
+      <label>
+        Price Per Share
         <input
-          className={errors.price ? styles.inputError : styles.input}
           name="price"
           min="0.01"
           type="number"
           step="0.01"
+          autoComplete="off"
           ref={register({ required: true })}
         ></input>
-      </div>
+      </label>
 
-      <hr className={styles.hr}></hr>
+      <h3>Total: ${total}</h3>
+      <p>Available cash: ${cashOnHand}</p>
+      <p>Cash remaining: ${cashRemaining}</p>
 
-      <div>
-        <div className={styles.tally}>
-          Total Price: ${totalPrice.toFixed(2)}
-        </div>
-      </div>
-      <div>
-        {errors.cashRemaining && errors.cashRemaining.type === 'validate' && (
-          <div className={styles.error}>
-            You don't have enough cash remaining
-          </div>
-        )}
-        <div className={styles.tally}>
-          {' '}
-          Cash Remaining: ${cashRemaining.toFixed(2)}
-        </div>
-      </div>
-
-      <input type="submit" className={styles.submit} />
+      <button
+        type="submit"
+        className={styles.submit}
+        disabled={+cashRemaining < 0}
+      >
+        Submit
+      </button>
     </form>
   );
 }
 
-function SellForm() {
-  // variables
-  const { register, handleSubmit, watch, reset, errors } = useForm({
+function SellForm(props) {
+  const { user } = props;
+  const { register, handleSubmit, watch } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
-    // tried changing this to 'onChange' and 'all' but did not address re-validation once autosuggestion is clicked
   });
+  const userStocks = Object.keys(user?.stocks ?? {});
+  const tickerSymbol = watch('tickerSymbol', userStocks[0]);
+  const quantity = watch('quantity', '0');
+  const price = watch('price', '0');
+  const total = (quantity * price).toFixed(2);
+  const quantityOnHand = user?.stocks?.[tickerSymbol]?.quantityOnHand;
+  const quantityRemaining = +quantityOnHand - +quantity;
 
-  const onSubmit = (data) => {
-    console.log(data);
-    reset();
-  };
-
-  const onErrors = (errors) => console.error(errors);
-
-  const stock = useRef({});
-  stock.current = watch('stock');
-
-  const sharePrice = useRef({});
-  sharePrice.current = watch('price', '0.00');
-
-  const quantity = useRef({});
-  quantity.current = watch('quantity', '');
-
-  const totalPrice = sharePrice.current * quantity.current;
-
-  // map to populate owned stocks list
-  const optionsArray = ownedStocks.map((x) => <option>{x.stockName}</option>);
-
-  // functions
-
-  function quantityCheck() {
-    for (var i = 0; i < ownedStocks.length; i++) {
-      if (ownedStocks[i].stockName === stock.current) {
-        return ownedStocks[i].stockShares;
-      } else {
-        return Infinity;
-      }
-    }
-  }
+  const onSubmit = (data) => console.log(data);
 
   return (
-    <form
-      className={styles.subFormContainer}
-      onSubmit={handleSubmit(onSubmit, onErrors)}
-    >
-      <div>
-        <input name="type" ref={register} defaultValue="sell" hidden />
-        {errors.username && errors.username.type === 'validate' && (
-          <div className={styles.error}>Enter your username</div>
-        )}
-        <label htmlFor="username">Stock To Sell: </label>
-        <select
-          name="username"
-          className={errors.username ? styles.usernameError : styles.select}
-          ref={register({
-            required: true,
-            validate: (value) => value !== '-select-',
-          })}
-        >
-          <option disabled selected>
-            -select-
-          </option>
-          {optionsArray}
-        </select>
-        <div>
-          {errors.quantity && errors.quantity.type === 'required' && (
-            <div className={styles.error}>Quantity must be selected</div>
-          )}
-          {errors.quantity && errors.quantity.type === 'validate' && (
-            <div className={styles.error}>
-              You have exceeded your owned shares
-            </div>
-          )}
-          <label htmlFor="quantity">Quantity: </label>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input name="orderType" ref={register} defaultValue="sell" hidden />
 
-          <input
-            className={errors.quantity ? styles.inputError : styles.input}
-            name="quantity"
-            min="1"
-            type="number"
-            step="1"
-            ref={register({
-              required: true,
-              validate: (value) => value <= quantityCheck(),
-            })}
-          ></input>
-        </div>
-        <div>
-          {errors.price && errors.price.type === 'required' && (
-            <div className={styles.error}>Price must be selected</div>
-          )}
-          <label htmlFor="price">Sell Price Per Share: $</label>
-          <input
-            className={errors.price ? styles.inputError : styles.input}
-            name="price"
-            min="0.01"
-            type="number"
-            step="0.01"
-            ref={register({ required: true })}
-          ></input>
-        </div>
-        <hr className={styles.hr}></hr>
-        <div>
-          <div className={styles.tally}>
-            {' '}
-            Total Price: ${totalPrice.toFixed(2)}
-          </div>
-        </div>
-        <input type="submit" className={styles.submit} />
-      </div>
+      <label>
+        Stock:
+        <select name="tickerSymbol" ref={register}>
+          {userStocks.map((tickerSymbol) => (
+            <option key={tickerSymbol} value={tickerSymbol}>
+              {tickerSymbol}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label>
+        Quantity
+        <input
+          name="quantity"
+          type="number"
+          step="1"
+          min="1"
+          autoComplete="off"
+          ref={register({ required: true })}
+        ></input>
+      </label>
+
+      <label>
+        Price Per Share
+        <input
+          name="price"
+          min="0.01"
+          type="number"
+          step="0.01"
+          autoComplete="off"
+          ref={register({ required: true })}
+        ></input>
+      </label>
+
+      <h3>Total: ${total}</h3>
+      <p>Available quantity: {quantityOnHand}</p>
+      <p>Quantity remaining: {quantityRemaining}</p>
+
+      <button type="submit" disabled={quantityRemaining < 0}>
+        Submit
+      </button>
     </form>
   );
 }

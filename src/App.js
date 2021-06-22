@@ -1,12 +1,21 @@
 // Modules
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
+// Redux store
+import { updateUserInfo } from './features/loginPage/userInfoSlice';
 
 // Styles
 import styles from './App.module.css';
 
 // Components
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Error404 from './features/errorPage/Error404';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import TransactionsFeed from './features/transactionsFeed/TransactionsFeed';
 import GlobalLoader from './features/portal/GlobalLoader';
 import Sidebar from './features/sidebar/Sidebar';
@@ -41,7 +50,7 @@ export default function App() {
             </Route>
 
             <Route exact path="/log-out">
-              <LoginPage logOut={true} />
+              <LogOut />
             </Route>
 
             <Route exact path="/login">
@@ -49,7 +58,7 @@ export default function App() {
             </Route>
 
             <Route path="/">
-              <Error404 />
+              <Redirect to="/login" />
             </Route>
           </Switch>
           <StockTicker />
@@ -57,4 +66,24 @@ export default function App() {
       </Router>
     </>
   );
+}
+
+function LogOut() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  useEffect(() => {
+    dispatch(
+      updateUserInfo({
+        email: '',
+        username: '',
+        accessToken: '',
+        idToken: '',
+        refreshToken: '',
+      })
+    );
+    history.push('/login');
+  }, [dispatch, history]);
+
+  return <h1>Testing 123 can anybody hear me?</h1>;
 }

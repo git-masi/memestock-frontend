@@ -1,31 +1,40 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchPageForTransactionsHistory,
-  fetchTransactionsHistory,
-  historySelector,
-  currentPageSelector,
-} from './historySlice';
-import PaginationControls from 'features/global/PaginationControls';
-import Transaction from 'features/global/Transaction';
+import { fetchOrderHistory, historySelector } from './historySlice';
+import styles from './History.module.css';
+import { usd } from 'utils/money';
 
 export default function History() {
   const dispatch = useDispatch();
-  const transactions = useSelector(currentPageSelector);
+  const { hasError, data } = useSelector(historySelector);
 
   useEffect(() => {
-    dispatch(fetchTransactionsHistory(historySelector));
+    dispatch(fetchOrderHistory());
   }, [dispatch]);
 
   return (
     <div style={{ paddingLeft: '10rem' }}>
-      <PaginationControls
-        changeDisplayPage={fetchPageForTransactionsHistory}
-        paginationSelector={historySelector}
-      />
+      <h1>Your Orders</h1>
 
-      {transactions.length > 0 &&
-        transactions.map((t) => <Transaction key={t.id} transaction={t} />)}
+      {data.length > 0 &&
+        data.map((order) => <UserOrder key={order.sk} order={order} />)}
+
+      {hasError && <p>Oops, something went wrong 😕</p>}
     </div>
+  );
+}
+
+function UserOrder(props) {
+  const { order } = props;
+
+  return (
+    <article className={styles.order}>
+      <h3 className={styles.orderType}>Order Type: {order.orderType}</h3>
+      <p>Status: {order.orderStatus}</p>
+      <p>Stock: {order.tickerSymbol}</p>
+      <p>Quantity: {order.quantity}</p>
+      <p>Total: {usd(+order.total)}</p>
+      <p>Created: {new Date(order.created).toDateString()}</p>
+    </article>
   );
 }
