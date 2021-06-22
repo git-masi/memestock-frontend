@@ -66,16 +66,16 @@ export default function NewOrder() {
       </div>
 
       {showBuyForm ? (
-        <BuyForm {...{ user, companies }} />
+        <BuyForm {...{ user, companies, accessToken }} />
       ) : (
-        <SellForm {...{ user, companies }} />
+        <SellForm {...{ user, companies, accessToken }} />
       )}
     </div>
   );
 }
 
 function BuyForm(props) {
-  const { user, companies } = props;
+  const { user, companies, accessToken } = props;
   const [stocksFound, setStocksFound] = useState([]);
   const { register, handleSubmit, watch, setValue } = useForm({
     mode: 'onBlur',
@@ -86,14 +86,41 @@ function BuyForm(props) {
   const price = watch('price', '0');
   const total = (quantity * price).toFixed(2);
   const cashOnHand = centsToDollars(user.cashOnHand);
-  const cashRemaining = cashOnHand - total;
+  const cashRemaining = (cashOnHand - total).toFixed(2);
   const optionSelected = useRef(false);
   const tickerSymbolInput = useRef(null);
   const tickerSymbolBlurTimeout = useRef(null);
 
   register(tickerSymbolInput.current, { required: true });
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const { quantity, price } = data;
+      const reqTotal = Math.round(+price * 100) * +quantity;
+      const reqBody = {
+        user: user.sk,
+        total: reqTotal,
+        orderType: data.orderType,
+        quantity: +quantity,
+        tickerSymbol: data.tickerSymbol,
+      };
+
+      await axios({
+        method: 'POST',
+        url: `${REACT_APP_MEMESTOCK_API}/orders`,
+        data: reqBody,
+        headers: {
+          Authorization: accessToken,
+        },
+      });
+
+      // There is probably a better way to handle this by calling
+      // the reset method in react-hook-form
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleStockInputKeyDown = (e) => {
     optionSelected.current = false;
@@ -134,7 +161,7 @@ function BuyForm(props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input name="type" ref={register} defaultValue="buy" hidden />
+      <input name="orderType" ref={register} defaultValue="buy" hidden />
 
       <div className={styles.stockWrapper}>
         <label>
@@ -229,7 +256,7 @@ function SellForm(props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input name="type" ref={register} defaultValue="sell" hidden />
+      <input name="orderType" ref={register} defaultValue="sell" hidden />
 
       <label>
         Stock:
