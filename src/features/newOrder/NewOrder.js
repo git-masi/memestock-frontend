@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
+import { centsToDollars } from 'utils/money';
 
 // Redux store
 import { selectUserInfo } from '../loginPage/userInfoSlice';
@@ -80,11 +81,15 @@ function BuyForm(props) {
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
+  const tickerSymbol = watch('tickerSymbol', '');
+  const quantity = watch('quantity', '0');
+  const price = watch('price', '0');
+  const total = (quantity * price).toFixed(2);
+  const cashOnHand = centsToDollars(user.cashOnHand);
+  const cashRemaining = cashOnHand - total;
   const optionSelected = useRef(false);
 
-  const stockInput = watch('stock', '');
-
-  console.log(stockInput);
+  console.log(tickerSymbol, quantity, price);
 
   const onSubmit = (data) => console.log(data);
 
@@ -103,22 +108,22 @@ function BuyForm(props) {
   useEffect(() => {
     if (!optionSelected.current)
       setStocksFound(
-        stockInput === ''
+        tickerSymbol === ''
           ? []
           : companies
               .map((c) => c.tickerSymbol)
-              .filter((s) => s.startsWith(stockInput.toUpperCase()))
+              .filter((s) => s.startsWith(tickerSymbol.toUpperCase()))
       );
-  }, [stockInput]);
+  }, [tickerSymbol]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <input name="type" ref={register} defaultValue="buy" hidden />
 
       <label>
-        Stock:
+        Stock
         <input
-          name="stock"
+          name="tickerSymbol"
           ref={register}
           onKeyDown={handleStockInputKeyDown}
         />
@@ -130,6 +135,38 @@ function BuyForm(props) {
           ))}
         </div>
       </label>
+
+      <label>
+        Quantity
+        <input
+          // className={errors.quantity ? styles.inputError : styles.input}
+          name="quantity"
+          type="number"
+          step="1"
+          min="1"
+          autoComplete="off"
+          ref={register({
+            required: true,
+          })}
+        ></input>
+      </label>
+
+      <label>
+        Price Per Share
+        <input
+          // className={errors.price ? styles.inputError : styles.input}
+          name="price"
+          min="0.01"
+          type="number"
+          step="0.01"
+          autoComplete="off"
+          ref={register({ required: true })}
+        ></input>
+      </label>
+
+      <h3>Total: ${total}</h3>
+      <p>Available cash: ${cashOnHand}</p>
+      <p>Cash remaining: ${cashRemaining}</p>
 
       <button type="submit">Submit</button>
     </form>
