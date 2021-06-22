@@ -16,7 +16,7 @@ import {
   faHistory,
   faPlusCircle,
   // faCog,
-  faChartLine,
+  // faChartLine,
   faChevronCircleLeft,
   faChevronCircleRight,
   faSignInAlt,
@@ -39,20 +39,20 @@ export default function Sidebar() {
             icon={faChevronCircleLeft}
             onClick={() => setOpenSidebar(false)}
             className={[styles.icon, styles.chevron].join(' ')}
-            size="2x"
+            size='2x'
           />
         ) : (
           <FontAwesomeIcon
             icon={faChevronCircleRight}
             onClick={() => setOpenSidebar(true)}
             className={[styles.icon, styles.chevron].join(' ')}
-            size="2x"
+            size='2x'
           />
         )}
 
         {!authorized && (
           <NavLink
-            to="/login"
+            to='/login'
             className={styles.link}
             activeClassName={styles.active}
           >
@@ -60,7 +60,7 @@ export default function Sidebar() {
             <FontAwesomeIcon
               icon={faSignInAlt}
               className={styles.icon}
-              size="2x"
+              size='2x'
             />
           </NavLink>
         )}
@@ -68,7 +68,7 @@ export default function Sidebar() {
         {authorized && (
           <>
             <NavLink
-              to="/feed"
+              to='/feed'
               className={styles.link}
               activeClassName={styles.active}
             >
@@ -76,7 +76,7 @@ export default function Sidebar() {
               <FontAwesomeIcon
                 icon={faCommentsDollar}
                 className={styles.icon}
-                size="2x"
+                size='2x'
               />
             </NavLink>
 
@@ -94,7 +94,7 @@ export default function Sidebar() {
             </NavLink> */}
 
             <NavLink
-              to="/history"
+              to='/history'
               className={styles.link}
               activeClassName={styles.active}
             >
@@ -102,12 +102,12 @@ export default function Sidebar() {
               <FontAwesomeIcon
                 icon={faHistory}
                 className={styles.icon}
-                size="2x"
+                size='2x'
               />
             </NavLink>
 
             <NavLink
-              to="/new-order"
+              to='/new-order'
               className={styles.link}
               activeClassName={styles.active}
             >
@@ -115,12 +115,12 @@ export default function Sidebar() {
               <FontAwesomeIcon
                 icon={faPlusCircle}
                 className={styles.icon}
-                size="2x"
+                size='2x'
               />
             </NavLink>
 
             <NavLink
-              to="/log-out"
+              to='/log-out'
               className={styles.link}
               activeClassName={styles.active}
             >
