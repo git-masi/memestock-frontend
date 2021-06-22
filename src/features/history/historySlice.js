@@ -60,7 +60,7 @@ export function fetchOrderHistory() {
     try {
       const currState = getState();
       const {
-        history: { data },
+        // history: { data },
         userInfo: { accessToken },
       } = currState;
 
