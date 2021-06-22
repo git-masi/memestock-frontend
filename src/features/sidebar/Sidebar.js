@@ -80,7 +80,7 @@ export default function Sidebar() {
               />
             </NavLink>
 
-            <NavLink
+            {/* <NavLink
               to="/visualize"
               className={styles.link}
               activeClassName={styles.active}
@@ -91,7 +91,7 @@ export default function Sidebar() {
                 className={styles.icon}
                 size="2x"
               />
-            </NavLink>
+            </NavLink> */}
 
             <NavLink
               to="/history"
