@@ -30,6 +30,14 @@ export const historySlice = createSlice({
       return {
         loading: false,
         hasError: false,
+        data: payload,
+      };
+    },
+    addMoreOrdersToHistory: (state, action) => {
+      const { payload } = action;
+      return {
+        loading: false,
+        hasError: false,
         data: state.data.concat(payload),
       };
     },
@@ -40,6 +48,7 @@ export const {
   startFetchingOrderHistory,
   errorFetchingOrderHistory,
   addOrdersToHistory,
+  addMoreOrdersToHistory,
 } = historySlice.actions;
 
 export const historySelector = (state) => state.history;
@@ -61,10 +70,11 @@ export function fetchOrderHistory() {
 
       let url = `${REACT_APP_MEMESTOCK_API}/orders/history`;
 
-      if (data.length > 0) {
-        const lastOrder = data[data.length - 1];
-        url = url + `&startSk=${lastOrder.sk}`;
-      }
+      // Something like this is useful if fetching more orders on scroll
+      // if (data.length > 0) {
+      //   const lastOrder = data[data.length - 1];
+      //   url = url + `?startSk=${lastOrder.sk}`;
+      // }
 
       const { data: orders } = await axios({
         method: 'GET',

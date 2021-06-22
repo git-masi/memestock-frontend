@@ -1,0 +1,17 @@
+.order {
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  max-width: 600px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 1rem;
+  border: 1px solid var(--black);
+  border-radius: var(--rounded);
+  box-shadow: var(--basic-shadow);
+}
+
+.orderType {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
