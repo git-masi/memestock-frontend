@@ -130,7 +130,7 @@ function BuyForm(props) {
               .map((c) => c.tickerSymbol)
               .filter((s) => s.startsWith(tickerSymbol.toUpperCase()))
       );
-  }, [tickerSymbol]);
+  }, [tickerSymbol, companies]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
