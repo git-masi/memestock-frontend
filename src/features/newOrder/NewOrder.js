@@ -88,21 +88,37 @@ function BuyForm(props) {
   const cashOnHand = centsToDollars(user.cashOnHand);
   const cashRemaining = cashOnHand - total;
   const optionSelected = useRef(false);
+  const tickerSymbolInput = useRef(null);
+  const tickerSymbolBlurTimeout = useRef(null);
 
-  console.log(tickerSymbol, quantity, price);
+  register(tickerSymbolInput.current, { required: true });
 
   const onSubmit = (data) => console.log(data);
 
   const handleStockInputKeyDown = (e) => {
-    console.log('key press');
     optionSelected.current = false;
   };
 
   const handleStockSuggestionClick = (e, value) => {
     e.preventDefault();
+    e.stopPropagation();
+    clearTimeout(tickerSymbolBlurTimeout.current);
+    tickerSymbolInput.current.focus();
     optionSelected.current = true;
-    setValue('stock', value);
+    setValue('tickerSymbol', value);
     setStocksFound([]);
+  };
+
+  const handleTickerSymbolBlur = () => {
+    // Calling setStocksFound([]) essentially dismisses the suggestions
+    // But the blur event is called before the suggestion button click event
+    // so by using a timeout we can dismiss the blur
+    // However, this is not the most riliable solution if the call stack
+    // has a lot going on
+    tickerSymbolBlurTimeout.current = setTimeout(() => {
+      setStocksFound([]);
+      optionSelected.current = false;
+    }, 50);
   };
 
   useEffect(() => {
@@ -120,26 +136,43 @@ function BuyForm(props) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <input name="type" ref={register} defaultValue="buy" hidden />
 
-      <label>
-        Stock
-        <input
-          name="tickerSymbol"
-          ref={register}
-          onKeyDown={handleStockInputKeyDown}
-        />
-        <div>
+      <div className={styles.stockWrapper}>
+        <label>
+          Stock Ticker
+          <input
+            autoComplete="off"
+            name="tickerSymbol"
+            ref={tickerSymbolInput}
+            onKeyDown={handleStockInputKeyDown}
+            onBlur={handleTickerSymbolBlur}
+          />
+        </label>
+
+        <div
+          className={[
+            styles.suggestionContainer,
+            stocksFound.length < 1 ? styles.hide : '',
+          ].join(' ')}
+        >
           {stocksFound.map((s) => (
-            <button key={s} onClick={(e) => handleStockSuggestionClick(e, s)}>
+            <button
+              key={s}
+              value={s}
+              onClick={(e) => {
+                handleStockSuggestionClick(e, s);
+              }}
+              onFocus={() => clearTimeout(tickerSymbolBlurTimeout.current)}
+              onBlur={handleTickerSymbolBlur}
+            >
               {s}
             </button>
           ))}
         </div>
-      </label>
+      </div>
 
       <label>
         Quantity
         <input
-          // className={errors.quantity ? styles.inputError : styles.input}
           name="quantity"
           type="number"
           step="1"
@@ -154,7 +187,6 @@ function BuyForm(props) {
       <label>
         Price Per Share
         <input
-          // className={errors.price ? styles.inputError : styles.input}
           name="price"
           min="0.01"
           type="number"
@@ -168,7 +200,13 @@ function BuyForm(props) {
       <p>Available cash: ${cashOnHand}</p>
       <p>Cash remaining: ${cashRemaining}</p>
 
-      <button type="submit">Submit</button>
+      <button
+        type="submit"
+        className={styles.submit}
+        disabled={+cashRemaining < 0}
+      >
+        Submit
+      </button>
     </form>
   );
 }
