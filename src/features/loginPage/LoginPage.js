@@ -146,8 +146,8 @@ export function SignUpPage() {
             <label>
               Username:
               <input
-                name="username"
-                type="text"
+                name='username'
+                type='text'
                 className={errors.username ? styles.inputError : styles.input}
                 ref={register({
                   required: true,
@@ -166,8 +166,8 @@ export function SignUpPage() {
             <label>
               Email:
               <input
-                name="email"
-                type="email"
+                name='email'
+                type='email'
                 className={errors.email ? styles.inputError : styles.input}
                 ref={register({
                   required: true,
@@ -185,8 +185,8 @@ export function SignUpPage() {
             <label>
               Password:
               <input
-                name="password"
-                type="password"
+                name='password'
+                type='password'
                 className={errors.password ? styles.inputError : styles.input}
                 ref={register({
                   required: true,
@@ -202,8 +202,8 @@ export function SignUpPage() {
             <label>
               Re-enter your password:
               <input
-                name="passwordTwo"
-                type="password"
+                name='passwordTwo'
+                type='password'
                 className={
                   errors.passwordTwo ? styles.inputError : styles.input
                 }
@@ -214,9 +214,9 @@ export function SignUpPage() {
             </label>
 
             <input
-              type="submit"
+              type='submit'
               /*disabled={Object.keys(errors).length > 0}*/
-              value="Sign Up Now"
+              value='Sign Up Now'
               className={styles.submit}
             />
           </div>
@@ -318,10 +318,10 @@ export function LoginPage(args) {
               <div className={styles.error}>{errors.password.message}</div>
             )}
 
-            <label htmlFor="username">
+            <label htmlFor='username'>
               Username:
               <input
-                name="username"
+                name='username'
                 className={errors.username ? styles.inputError : styles.input}
                 ref={register({
                   required: true,
@@ -332,21 +332,21 @@ export function LoginPage(args) {
             <label>
               Password:&nbsp;&nbsp;
               <input
-                name="password"
-                type="password"
+                name='password'
+                type='password'
                 className={errors.password ? styles.inputError : styles.input}
                 ref={register({
                   required: true,
                 })}
               />
             </label>
-            <div id="submit">
-              <input type="submit" value="Sign In" className={styles.submit} />
+            <div id='submit'>
+              <input type='submit' value='Sign In' className={styles.submit} />
             </div>
             <div className={styles.signup_link}>
               <span>Don't have a login? &nbsp;&nbsp;</span>
               <NavLink
-                to="/sign-up"
+                to='/sign-up'
                 className={styles.link}
                 activeClassName={styles.active}
               >
@@ -354,7 +354,7 @@ export function LoginPage(args) {
                 <FontAwesomeIcon
                   icon={faUserPlus}
                   className={styles.icon}
-                  size="1x"
+                  size='1x'
                 />
               </NavLink>
             </div>

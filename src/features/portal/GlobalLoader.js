@@ -9,7 +9,7 @@ import Loader from '../global/Loader';
 
 function GlobalLoader() {
   const showGlobalLoader = useSelector(currentGlobalLoaderState);
-  return <Portal id="globalLoader">{showGlobalLoader && <Loader />}</Portal>;
+  return <Portal id='globalLoader'>{showGlobalLoader && <Loader />}</Portal>;
 }
 
 export default GlobalLoader;

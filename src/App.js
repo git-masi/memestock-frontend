@@ -33,32 +33,32 @@ export default function App() {
         <main className={styles.main}>
           <Sidebar />
           <Switch>
-            <PrivateRoute exact path="/feed">
+            <PrivateRoute exact path='/feed'>
               <TransactionsFeed />
             </PrivateRoute>
 
-            <PrivateRoute exact path="/new-order">
+            <PrivateRoute exact path='/new-order'>
               <NewOrder />
             </PrivateRoute>
 
-            <PrivateRoute exact path="/history">
+            <PrivateRoute exact path='/history'>
               <History />
             </PrivateRoute>
 
-            <Route exact path="/sign-up">
+            <Route exact path='/sign-up'>
               <SignUpPage />
             </Route>
 
-            <Route exact path="/log-out">
+            <Route exact path='/log-out'>
               <LogOut />
             </Route>
 
-            <Route exact path="/login">
+            <Route exact path='/login'>
               <LoginPage />
             </Route>
 
-            <Route path="/">
-              <Redirect to="/login" />
+            <Route path='/'>
+              <Redirect to='/login' />
             </Route>
           </Switch>
           <StockTicker />
