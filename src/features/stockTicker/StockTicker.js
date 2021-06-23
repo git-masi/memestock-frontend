@@ -36,7 +36,7 @@ export default function StockTicker() {
   return (
     <section className={styles.container}>
       {stocksArray.length > 0 && (
-        <Ticker mode="await">
+        <Ticker mode='await'>
           {() => (
             <>
               {stocksArray.map((stock) => {

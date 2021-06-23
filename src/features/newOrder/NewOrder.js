@@ -2,7 +2,7 @@
 import axios from 'axios';
 import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { centsToDollars } from 'utils/money';
 
 // Redux store
@@ -10,6 +10,9 @@ import { selectUserInfo } from '../loginPage/userInfoSlice';
 
 // Styles
 import styles from './NewOrder.module.css';
+
+//Utils
+import { showLoader, hideLoader } from '../portal/globalLoaderSlice';
 
 const { REACT_APP_MEMESTOCK_API } = process.env;
 
@@ -77,6 +80,7 @@ export default function NewOrder() {
 function BuyForm(props) {
   const { user, companies, accessToken } = props;
   const [stocksFound, setStocksFound] = useState([]);
+  const dispatch = useDispatch();
   const { register, handleSubmit, watch, setValue } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -105,6 +109,8 @@ function BuyForm(props) {
         tickerSymbol: data.tickerSymbol,
       };
 
+      dispatch(showLoader());
+
       await axios({
         method: 'POST',
         url: `${REACT_APP_MEMESTOCK_API}/orders`,
@@ -119,6 +125,8 @@ function BuyForm(props) {
       window.location.reload();
     } catch (error) {
       console.log(error);
+    } finally {
+      dispatch(hideLoader());
     }
   };
 
@@ -161,14 +169,14 @@ function BuyForm(props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input name="orderType" ref={register} defaultValue="buy" hidden />
+      <input name='orderType' ref={register} defaultValue='buy' hidden />
 
       <div className={styles.stockWrapper}>
         <label>
           Stock Ticker
           <input
-            autoComplete="off"
-            name="tickerSymbol"
+            autoComplete='off'
+            name='tickerSymbol'
             ref={tickerSymbolInput}
             onKeyDown={handleStockInputKeyDown}
             onBlur={handleTickerSymbolBlur}
@@ -200,11 +208,11 @@ function BuyForm(props) {
       <label>
         Quantity
         <input
-          name="quantity"
-          type="number"
-          step="1"
-          min="1"
-          autoComplete="off"
+          name='quantity'
+          type='number'
+          step='1'
+          min='1'
+          autoComplete='off'
           ref={register({
             required: true,
           })}
@@ -214,11 +222,11 @@ function BuyForm(props) {
       <label>
         Price Per Share
         <input
-          name="price"
-          min="0.01"
-          type="number"
-          step="0.01"
-          autoComplete="off"
+          name='price'
+          min='0.01'
+          type='number'
+          step='0.01'
+          autoComplete='off'
           ref={register({ required: true })}
         ></input>
       </label>
@@ -228,7 +236,7 @@ function BuyForm(props) {
       <p>Cash remaining: ${cashRemaining}</p>
 
       <button
-        type="submit"
+        type='submit'
         className={styles.submit}
         disabled={+cashRemaining < 0}
       >
@@ -239,7 +247,8 @@ function BuyForm(props) {
 }
 
 function SellForm(props) {
-  const { user } = props;
+  const dispatch = useDispatch();
+  const { user, accessToken } = props;
   const { register, handleSubmit, watch } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -252,15 +261,43 @@ function SellForm(props) {
   const quantityOnHand = user?.stocks?.[tickerSymbol]?.quantityOnHand;
   const quantityRemaining = +quantityOnHand - +quantity;
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const { quantity, price, orderType, tickerSymbol } = data;
+      const reqTotal = Math.round(+price * 100) * +quantity;
+      const reqBody = {
+        user: user.sk,
+        total: reqTotal,
+        orderType,
+        quantity: +quantity,
+        tickerSymbol,
+      };
+
+      dispatch(showLoader());
+
+      await axios({
+        method: 'POST',
+        url: `${REACT_APP_MEMESTOCK_API}/orders`,
+        data: reqBody,
+        headers: {
+          Authorization: accessToken,
+        },
+      });
+      window.location.reload();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      dispatch(hideLoader());
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input name="orderType" ref={register} defaultValue="sell" hidden />
+      <input name='orderType' ref={register} defaultValue='sell' hidden />
 
       <label>
         Stock:
-        <select name="tickerSymbol" ref={register}>
+        <select name='tickerSymbol' ref={register}>
           {userStocks.map((tickerSymbol) => (
             <option key={tickerSymbol} value={tickerSymbol}>
               {tickerSymbol}
@@ -272,11 +309,11 @@ function SellForm(props) {
       <label>
         Quantity
         <input
-          name="quantity"
-          type="number"
-          step="1"
-          min="1"
-          autoComplete="off"
+          name='quantity'
+          type='number'
+          step='1'
+          min='1'
+          autoComplete='off'
           ref={register({ required: true })}
         ></input>
       </label>
@@ -284,11 +321,11 @@ function SellForm(props) {
       <label>
         Price Per Share
         <input
-          name="price"
-          min="0.01"
-          type="number"
-          step="0.01"
-          autoComplete="off"
+          name='price'
+          min='0.01'
+          type='number'
+          step='0.01'
+          autoComplete='off'
           ref={register({ required: true })}
         ></input>
       </label>
@@ -297,7 +334,7 @@ function SellForm(props) {
       <p>Available quantity: {quantityOnHand}</p>
       <p>Quantity remaining: {quantityRemaining}</p>
 
-      <button type="submit" disabled={quantityRemaining < 0}>
+      <button type='submit' disabled={quantityRemaining < 0}>
         Submit
       </button>
     </form>
